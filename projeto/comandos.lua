@@ -72,9 +72,11 @@ function tratamentoComandos(s, m, c)
   -- Para tratamento de while
   tmp = s:pop(1)
 
-  if tmp = "while"
+  if tmp == "while" then
 
-  elseif tmp = ""
+  elseif tmp == "" then
+
+  end
 
 end
 
@@ -86,7 +88,7 @@ m = Stack:Create()
 c = Stack:Create()
 
 
-entrada = {"while", "a < 10", "do", "print(a)"}
+entrada = {"while", "a < 10", "do", "print(a)", "end"}
 
 
 tamanho_entrada = table.maxn(entrada)
@@ -101,5 +103,5 @@ print("Entrada...")
 c:list()
 
 
-tratamentoComandos()
+tratamentoComandos(s, m, c)
 c:list()
