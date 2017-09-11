@@ -98,6 +98,8 @@ function tratamentoComandos(s, m, c)
     else
       print("Condição inválida.")
     end
+  elseif tmp == "if" then
+  	
   elseif tmp == "" then
     print('end');
   end

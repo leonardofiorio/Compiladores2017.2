@@ -1,70 +1,5 @@
--- -------------------------Implementação de pilha-------------------------
- -- Pilha usando tabela, use <table>:push(value) and <table>:pop()
-
--- Global
-Stack = {}
-
--- Create a Table with stack functions
--- Criar uma tabela com funções de pilha
-function Stack:Create()
-
-  -- stack table
-  local t = {}
-  -- entry table
-  t._et = {}
-
-  -- push a value on to the stack
-  function t:push(...)
-    if ... then
-      local targs = {...}
-      -- add values
-      for _,v in ipairs(targs) do
-        table.insert(self._et, v)
-      end
-    end
-  end
-
-  -- pop a value from the stack
-  function t:pop(num)
-
-    -- get num values from stack
-    local num = num or 1
-
-    -- return table
-    local entries = {}
-
-    -- get values into entries
-    for i = 1, num do
-      -- get last entry
-      if #self._et ~= 0 then
-        table.insert(entries, self._et[#self._et])
-        -- remove last value
-        table.remove(self._et)
-      else
-      	return nil
-        --break
-      end
-    end
-    -- return unpacked entries
-    return unpack(entries)
-  end
-
-  -- get entries
-  function t:getn()
-    return #self._et
-  end
-
-  -- list values
-  function t:list()
-  	print("=>Base da pilha<=")
-    for i,v in pairs(self._et) do
-      print(i,v)
-    end
-    print("=>Topo da pilha<=")
-  end
-  return t
-end
-
+-- Incluindo implementação da pilha
+require "pilha"
 
 -- ------------------------- Funções para resolver SMC-------------------------
 -- Pilha auxiliar para guardar números naturais
@@ -109,44 +44,49 @@ function ordenarC(s, m , c, naturais, operadores)
 end 
 
 function resolverExpressoes(s, m, c, flag)
-  print("resolverExpressoes está começando a executar")
+  --print("resolverExpressoes está começando a executar")
 
-  print("Pilha s")
+  print("Pilha S")
   s:list()
-
+  print("")
+  print("Pilha M")
+  m:list()
+  print("")
   print("Pilha C")
   c:list()
+  print("")
+  print("------------------")
 
   elemento = s:pop(1)
   operacao = c:pop(1)
-  print("Operacao", operacao)
-  print("Elemento", elemento)
+  --print("Operacao", operacao)
+  --print("Elemento", elemento)
 
   aux = 0
   if operacao ~=nil then
     if operacao == "+" then
-      print("Soma")
+      --print("Soma")
       --return s:push(elemento + resolverExpressoes(s,m,c))
       aux = elemento + resolverExpressoes(s,m,c, false)
-      print(aux)
+      --print(aux)
       if flag then
         s:push(aux)
       end
       return aux
     elseif operacao == "-" then
-      print("Subtração")
+      --print("Subtração")
       --return s:push(elemento - resolverExpressoes(s,m,c))
       aux = elemento - resolverExpressoes(s,m,c, false)
-      print(aux)
+      --print(aux)
       if flag then
         s:push(aux)
       end
       return aux
     elseif operacao == "*" then
-      print("Multiplicação")
+      --print("Multiplicação")
       --return s:push(elemento * resolverExpressoes(s,m,c))
       aux = elemento * resolverExpressoes(s,m,c, false)
-      print(aux)
+      --print(aux)
       if flag then
         s:push(aux)
       end
@@ -158,17 +98,17 @@ function resolverExpressoes(s, m, c, flag)
 
   c:push(aux)
 
-  print("Pilha S depois ")
-  s:list()
-  print("Pilha C depois")
-  c:list()
+  --print("Pilha S depois ")
+  --s:list()
+  --print("Pilha C depois")
+  --c:list()
 end
 
 
 -- Essa função é responsável por 
 function tratamentoExpressoes(s, m, c, naturais, operadores)
 	ordenarC(s, m, c, naturais, operadores)
-  resolverExpressoes(s, m , c, true)
+  	resolverExpressoes(s, m , c, true)
 end
 
 -- Essa função retorna valor boolean para identificar se valor passado como parâmetro
@@ -208,5 +148,15 @@ c:list()
 print("-------------------------------Tratando expressões-------------------------------")
 -- Tratamento da expressões
 tratamentoExpressoes(s, m, c, naturais, operadores)
+print("Resposta final")
+print("Pilha S")
 s:list()
+print("")
+print("Pilha M")
+m:list()
+print("")
+print("Pilha C")
+c:list()
+print("")
+
 
