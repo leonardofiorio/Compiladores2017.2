@@ -130,8 +130,7 @@ end
 s = Stack:Create()
 m = Stack:Create()
 c = Stack:Create()
--- v pertence a {a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z}
--- n pertence aos Naturais
+
 
 entrada= {4, "*" , 2 , "+" , 5}
 tamanho_entrada = table.maxn(entrada)
