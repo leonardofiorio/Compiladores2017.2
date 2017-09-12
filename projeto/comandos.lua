@@ -1,3 +1,13 @@
+local m = require"lpeg"
+
+local any = m.P(1)
+local space = m.S" \t\n"^0
+local digit = m.S"0123456789"
+local upper = m.S"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+local lower = m.S"abcdefghijklmnopqrstuvwxyz"
+local letter = m.S"" + upper + lower
+local alpha = letter + digit + m.R()
+
 -- -------------------------Implementação de pilha-------------------------
  -- Pilha usando tabela, use <table>:push(value) and <table>:pop()
 
