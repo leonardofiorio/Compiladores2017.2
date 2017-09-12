@@ -80,21 +80,12 @@ function tratamentoComandos(s, m, c)
         print(x)
       end
       --considerando que primeiro venha a variavel e depois a contatante a < 10
-      local a = m[cond[1]]
-      local simbolo = cond[2]
-      local constante = cond[3]
-      if simbolo == "==" then
-      elseif simbolo == "~=" then
-      elseif simbolo == "<" then
-        while a < tonumber(constante) do
-          print(a)
-          m[cond[1]] = m[cond[1]] + 1
-          a = m[cond[1]]
-        end
-      elseif simbolo == "<=" then
-      elseif simbolo == ">" then
-      elseif simbolo == ">=" then                
+      while verificaCondicao(cond, m) do
+        a = m[cond[1]]
+        print(a)
+        m[cond[1]] = m[cond[1]] + 1
       end
+      
     else
       print("Condição inválida.")
     end
@@ -120,13 +111,29 @@ function pegarCondicao(s, m, c)
   return cond
 end
 
+function verificaCondicao(cond, m)
+  local a = m[cond[1]]
+  local simbolo = cond[2]
+  local constante = tonumber(cond[3])
+  
+  if simbolo == "==" then 
+  elseif simbolo == "~=" then
+  elseif simbolo == "<" then
+    return a < constante
+  elseif simbolo == "<=" then
+  elseif simbolo == ">" then
+  elseif simbolo == ">=" then                
+  end
+  return false
+end
+
  
 -- -------------------------------- SMC ---------------------------------------
 
 s = Stack:Create()
 --m = Stack:Create()
 m = {}
-m['a'] = -1
+m['a'] = 7
 c = Stack:Create()
 
 
