@@ -112,6 +112,7 @@ function pegarCondicao(s, m, c)
 end
 
 function verificaCondicao(cond, m)
+  --if #cond == 3 do
   local a = m[cond[1]]
   local simbolo = cond[2]
   local constante = tonumber(cond[3])
