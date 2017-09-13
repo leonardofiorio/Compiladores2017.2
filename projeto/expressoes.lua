@@ -58,39 +58,65 @@ function resolverExpressoes(s, m, c, flag)
   print("------------------")
 
   elemento = s:pop(1)
+  --checkHere -> erro caso elemento seja palavra reservada; pegar da memoria caso seja alphabeto
   operacao = c:pop(1)
-  --print("Operacao", operacao)
-  --print("Elemento", elemento)
-
+  
   aux = 0
   if operacao ~=nil then
     if operacao == "+" then
-      --print("Soma")
-      --return s:push(elemento + resolverExpressoes(s,m,c))
       aux = elemento + resolverExpressoes(s,m,c, false)
-      --print(aux)
       if flag then
         s:push(aux)
       end
       return aux
     elseif operacao == "-" then
-      --print("Subtração")
-      --return s:push(elemento - resolverExpressoes(s,m,c))
-      aux = - elemento + resolverExpressoes(s,m,c, false) 
-      --print(aux)
+      aux = elemento - resolverExpressoes(s,m,c, false)
       if flag then
         s:push(aux)
       end
       return aux
     elseif operacao == "*" then
-      --print("Multiplicação")
-      --return s:push(elemento * resolverExpressoes(s,m,c))
       aux = elemento * resolverExpressoes(s,m,c, false)
-      --print(aux)
       if flag then
         s:push(aux)
       end
       return aux
+    elseif operacao == ">" then
+      aux = (elemento > resolverExpressoes(s,m,c, false))
+      if flag then
+        s:push(pegarBoolean(aux))  
+      end
+      return aux
+    elseif operacao == "<" then
+      aux = (elemento < resolverExpressoes(s,m,c, false))
+      if flag then
+        s:push(pegarBoolean(aux))  
+      end
+      return aux  
+    elseif operacao == "==" then
+      aux = (elemento == resolverExpressoes(s,m,c, false))
+      if flag then
+        s:push(pegarBoolean(aux))  
+      end
+      return aux  
+    elseif operacao == ">=" then
+      aux = (elemento >= resolverExpressoes(s,m,c, false))
+      if flag then
+        s:push(pegarBoolean(aux))  
+      end
+      return aux  
+    elseif operacao == "<=" then
+      aux = (elemento <= resolverExpressoes(s,m,c, false))
+      if flag then
+        s:push(pegarBoolean(aux))  
+      end
+      return aux  
+    elseif operacao == "!=" then
+      aux = (elemento ~= resolverExpressoes(s,m,c, false))
+      if flag then
+        s:push(pegarBoolean(aux))  
+      end
+      return aux  
     end
   else
     return elemento
@@ -104,42 +130,61 @@ function resolverExpressoes(s, m, c, flag)
   --c:list()
 end
 
+function pegarBoolean(b)
+  if b then
+    return "tt"
+  else
+    return "ff"
+  end
+end
 
 -- Essa função é responsável por 
 function tratamentoExpressoes(s, m, c, naturais, operadores)
 	ordenarC(s, m, c, naturais, operadores)
-  	resolverExpressoes(s, m , c, true)
+	resolverExpressoes(s, m , c, true)
 end
 
 -- Essa função retorna valor boolean para identificar se valor passado como parâmetro
 -- é uma operação aceita pela linguagem ou outro componente da linguagem
 function verificaOperacao(op)
-	if op == "+" or op == "-" or op =="*" then 
+	if op == "+" or 
+    op == "-" or 
+    op == "*" or
+    op == ">" or
+    op == "<" or
+    op == "==" or
+    op == ">=" or
+    op == "<=" or
+    op == "!=" then 
 		return true
 	end
 	return false
 end
-
--------------------------------------------------------------------------------
-
-
-
  
 -- -------------------------------- SMC ---------------------------------------
 
 s = Stack:Create()
 m = Stack:Create()
 c = Stack:Create()
+-- v pertence a {a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z}
+-- n pertence aos Naturais
 
-
-entrada= {5, "-" , 2}
+entrada= {4, "+" , 5, "*", 2 }
+-- entrada = {10, "<", 10, "+", 10 , "*", 2}
 tamanho_entrada = table.maxn(entrada)
 
-i = tamanho_entrada
-while i > 0 do
+-- i = tamanho_entrada
+-- while i > 0 do
+--   c:push(entrada[i])
+--   i=i-1 
+-- end
+
+i = 1
+while i <= tamanho_entrada do
   c:push(entrada[i])
-  i=i-1 
+  i=i+1 
 end
+
 
 print("Entrada...")
 c:list()
@@ -156,7 +201,6 @@ m:list()
 print("")
 print("Pilha C")
 c:list()
-
 print("")
 
 

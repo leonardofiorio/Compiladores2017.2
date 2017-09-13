@@ -148,7 +148,7 @@ m['a'] = 7
 c = Stack:Create()
 
 
-entrada = {"while", "a", "<", "10", "do", "print(a)", "a", "=", "a", "+", "1", "end"}
+entrada = {"while", "a < 10", "do", "print(a)", "a", "=", "a", "+", "1", "end"}
 
 
 tamanho_entrada = table.maxn(entrada)

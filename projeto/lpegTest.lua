@@ -1,10 +1,11 @@
 local lpeg = require"lpeg"
+require "pilha"
 
 -- Lexical Elements
 local Space = lpeg.S(" \n\t")^0
 local Number = lpeg.C(lpeg.P"-"^-1 * lpeg.R("09")^1) * Space
 local TermOp = lpeg.C(lpeg.S("+-")) * Space
-local FactorOp = lpeg.C(lpeg.S("*/")) * Space
+local FactorOp = lpeg.C(lpeg.S("*/^")) * Space
 local Open = "(" * Space
 local Close = ")" * Space
 
@@ -31,6 +32,7 @@ function eval (x)
       elseif (op == "-") then op1 = op1 - op2
       elseif (op == "*") then op1 = op1 * op2
       elseif (op == "/") then op1 = op1 / op2
+      elseif (op == "^") then op1 = op1 ^ op2
       end
     end
     return op1
@@ -60,5 +62,12 @@ function dump(o)
 end
 
 -- small example
-print(evalExp("3 + 5*9 / (1+1) - 12"))   --> 13.5
+print(evalExp("3^1 + 5*9 / (1+1) - 12"))   --> 13.5
 
+
+local integer = lpeg.R("09")^1 / tonumber
+local integer_or_char = integer + lpeg.P(1)
+local extract_ints = lpeg.Ct(integer_or_char^0)
+
+local table = extract_ints:match("5 + 5 ==7 7 7") --> {5,5,5,7,7,7}
+print(dump(table))
