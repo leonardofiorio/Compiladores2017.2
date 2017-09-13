@@ -76,7 +76,7 @@ function resolverExpressoes(s, m, c, flag)
     elseif operacao == "-" then
       --print("Subtração")
       --return s:push(elemento - resolverExpressoes(s,m,c))
-      aux = elemento - resolverExpressoes(s,m,c, false)
+      aux = (elemento - resolverExpressoes(s,m,c, false)) * (-1)
       --print(aux)
       if flag then
         s:push(aux)
@@ -132,7 +132,7 @@ m = Stack:Create()
 c = Stack:Create()
 
 
-entrada= {4, "*" , 2 , "+" , 5}
+entrada= {5, "-" , 2, "-", 1}
 tamanho_entrada = table.maxn(entrada)
 
 i = tamanho_entrada
