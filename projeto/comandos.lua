@@ -1,3 +1,5 @@
+require "pilha"
+require "expressoes"
 local m = require"lpeg"
 
 local any = m.P(1)
@@ -8,134 +10,115 @@ local lower = m.S"abcdefghijklmnopqrstuvwxyz"
 local letter = m.S"" + upper + lower
 local alpha = letter + digit + m.R()
 
--- -------------------------Implementação de pilha-------------------------
- -- Pilha usando tabela, use <table>:push(value) and <table>:pop()
-
--- Global
-Stack = {}
-
--- Create a Table with stack functions
--- Criar uma tabela com funções de pilha
-function Stack:Create()
-
-  -- stack table
-  local t = {}
-  -- entry table
-  t._et = {}
-
-  -- push a value on to the stack
-  function t:push(...)
-    if ... then
-      local targs = {...}
-      -- add values
-      for _,v in ipairs(targs) do
-        table.insert(self._et, v)
-      end
-    end
-  end
-
-  -- pop a value from the stack
-  function t:pop(num)
-
-    -- get num values from stack
-    local num = num or 1
-
-    -- return table
-    local entries = {}
-
-    -- get values into entries
-    for i = 1, num do
-      -- get last entry
-      if #self._et ~= 0 then
-        table.insert(entries, self._et[#self._et])
-        -- remove last value
-        table.remove(self._et)
-      else
-      	return nil
-        --break
-      end
-    end
-    -- return unpacked entries
-    return unpack(entries)
-  end
-
-  -- get entries
-  function t:getn()
-    return #self._et
-  end
-
-  -- list values
-  function t:list()
-  	print("=>Base da pilha<=")
-    for i,v in pairs(self._et) do
-      print(i,v)
-    end
-    print("=>Topo da pilha<=")
-  end
-  return t
-end
 
 -- ------------------------- Funções para resolver SMC-------------------------
-
+auxexpressao= Stack:Create()
+cond = Stack:Create()
 
 function tratamentoComandos(s, m, c)
   -- Para tratamento de while
   tmp = c:pop(1)
+  print(tmp)
+  local cond = Stack:Create()
+  local comandos = Stack:Create()
 
   if tmp == "while" then
-    cond = pegarCondicao(s, m, c)
-    if cond ~= nil then
-      print("ok")
-      for _, x in ipairs(cond) do
-        print(x)
-      end
-      --considerando que primeiro venha a variavel e depois a contatante a < 10
-      while verificaCondicao(cond, m) do
-        a = m[cond[1]]
-        print(a)
-        m[cond[1]] = m[cond[1]] + 1
+    s_while = Stack:Create()
+    m_while = Stack:Create()
+    nat = Stack:Create()
+    op = Stack:Create()
+
+
+    print("Pegar Condição")
+    -- Pilha para separar a expressão de condição
+    copia_condicao_c = Stack:Create()
+    tmp_exp = c:pop(1)
+    while tmp_exp ~= "do" and tmp_exp ~= nil do
+      cond:push(tmp_exp)
+      auxexpressao:push(tmp_exp)
+      copia_condicao_c:push(tmp_exp)
+      tmp_exp = c:pop(1)
+    end
+    cond:list()
+
+
+    print("Pegar bloco comandos while")
+    copia_comandos_s = Stack:Create()
+    copia_comandos_c = Stack:Create()
+    tmp_cmd = c:pop(1)
+    while tmp_cmd ~= "end" and tmp_cmd ~= nil do
+      copia_comandos_s:push(tmp_cmd)
+      copia_comandos_c:push(tmp_cmd)
+      comandos:push(tmp_cmd)
+      tmp_cmd = c:pop(1)
+    end
+    comandos:list()
+
+    -- Passando bloco de comandos para S
+    tmp_cmd = comandos:pop(1)
+    while tmp_cmd ~= nil do
+      s:push(tmp_cmd)
+      tmp_cmd = comandos:pop(1)
+    end
+
+
+    print("Expressão a ser verificada")
+    auxexpressao:list()
+    print("Tratamento de Expressões")
+    tratamentoExpressoes(s_while,m_while, auxexpressao,nat, op)
+
+    print("Saiu do tratamento de Expressões")
+    s_while:list()
+
+    -- Passando expressão para S
+    tmp_exp = cond:pop(1)
+    while tmp_exp ~= nil do
+      s:push(tmp_exp)
+      tmp_exp = cond:pop(1)
+    end
+
+    s:push(s_while:pop(1))
+
+    if s:pop(1) == "tt" then
+      -- Remontando while
+      print("Remontando While")
+
+      c:push("end")
+      tmp_cmd = copia_comandos_c:pop(1)
+      while tmp_cmd ~= "end" and tmp_cmd ~= nil do
+        c:push(tmp_cmd)
+        tmp_cmd = copia_comandos_c:pop(1)
       end
       
+      c:push("do")
+
+      tmp_cmd = copia_condicao_c:pop(1)
+      while tmp_cmd ~= nil do
+        c:push(tmp_cmd)
+        tmp_cmd = copia_condicao_c:pop(1)
+      end
+
+      c:push("while")
+
+      tmp_cmd = copia_comandos_s:pop(1)
+      while tmp_cmd ~= nil do
+        c:push(tmp_cmd)
+        tmp_cmd = copia_comandos_s:pop(1)
+      end
+
+
+      c:list()
     else
-      print("Condição inválida.")
+      while tmp_exp ~= "end" do
+        
+      end
     end
+
   elseif tmp == "if" then
   	
   elseif tmp == "" then
     print('end');
   end
-print(tmp)
-
-end
-
-function pegarCondicao(s, m, c)
-  cond = {}
-  local value = c:pop(1)
-  while value ~= "do" do
-    if value == nil then
-      return nil
-    end
-    table.insert(cond, value)
-    value = c:pop(1)
-  end
-  return cond
-end
-
-function verificaCondicao(cond, m)
-  --if #cond == 3 do
-  local a = m[cond[1]]
-  local simbolo = cond[2]
-  local constante = tonumber(cond[3])
-  
-  if simbolo == "==" then 
-  elseif simbolo == "~=" then
-  elseif simbolo == "<" then
-    return a < constante
-  elseif simbolo == "<=" then
-  elseif simbolo == ">" then
-  elseif simbolo == ">=" then                
-  end
-  return false
 end
 
  
@@ -148,7 +131,7 @@ m['a'] = 7
 c = Stack:Create()
 
 
-entrada = {"while", "a < 10", "do", "print(a)", "a", "=", "a", "+", "1", "end"}
+entrada = {"while", 8, "<", 10, "do", "print(a)", "a", "=", "a", "+", "1", "end"}
 
 
 tamanho_entrada = table.maxn(entrada)

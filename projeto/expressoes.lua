@@ -169,38 +169,38 @@ c = Stack:Create()
 -- v pertence a {a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z}
 -- n pertence aos Naturais
 
-entrada= {4, "+" , 5, "*", 2 }
--- entrada = {10, "<", 10, "+", 10 , "*", 2}
-tamanho_entrada = table.maxn(entrada)
+-- entrada= {4, ">" , 5, "*", 2 }
+-- -- entrada = {10, "<", 10, "+", 10 , "*", 2}
+-- tamanho_entrada = table.maxn(entrada)
 
--- i = tamanho_entrada
--- while i > 0 do
+-- -- i = tamanho_entrada
+-- -- while i > 0 do
+-- --   c:push(entrada[i])
+-- --   i=i-1 
+-- -- end
+
+-- i = 1
+-- while i <= tamanho_entrada do
 --   c:push(entrada[i])
---   i=i-1 
+--   i=i+1 
 -- end
 
-i = 1
-while i <= tamanho_entrada do
-  c:push(entrada[i])
-  i=i+1 
-end
 
+-- print("Entrada...")
+-- c:list()
 
-print("Entrada...")
-c:list()
-
-print("-------------------------------Tratando expressões-------------------------------")
--- Tratamento da expressões
-tratamentoExpressoes(s, m, c, naturais, operadores)
-print("Resposta final")
-print("Pilha S")
-s:list()
-print("")
-print("Pilha M")
-m:list()
-print("")
-print("Pilha C")
-c:list()
-print("")
+-- print("-------------------------------Tratando expressões-------------------------------")
+-- -- Tratamento da expressões
+-- tratamentoExpressoes(s, m, c, naturais, operadores)
+-- print("Resposta final")
+-- print("Pilha S")
+-- s:list()
+-- print("")
+-- print("Pilha M")
+-- m:list()
+-- print("")
+-- print("Pilha C")
+-- c:list()
+-- print("")
 
 
