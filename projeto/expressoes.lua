@@ -50,7 +50,7 @@ function resolverExpressoes(s, m, c, flag)
   s:list()
   print("")
   print("Pilha M")
-  m:list()
+  --m:list()
   print("")
   print("Pilha C")
   c:list()
@@ -58,6 +58,13 @@ function resolverExpressoes(s, m, c, flag)
   print("------------------")
 
   elemento = s:pop(1)
+  if(type(elemento) ~= "number") then
+    local e = elemento
+    elemento = m[elemento]
+    if elemento == nil then
+      error("Não foi possível encontrar o símbolo '"..e.."' na memória.")
+    end
+  end
   --checkHere -> erro caso elemento seja palavra reservada; pegar da memoria caso seja alphabeto
   operacao = c:pop(1)
   
@@ -124,10 +131,10 @@ function resolverExpressoes(s, m, c, flag)
 
   c:push(aux)
 
-  --print("Pilha S depois ")
-  --s:list()
-  --print("Pilha C depois")
-  --c:list()
+  print("Pilha S depois ")
+  s:list()
+  print("Pilha C depois")
+  c:list()
 end
 
 function pegarBoolean(b)

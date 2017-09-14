@@ -24,7 +24,6 @@ function tratamentoComandos(s, m, c)
 
   if tmp == "while" then
     s_while = Stack:Create()
-    m_while = Stack:Create()
     nat = Stack:Create()
     op = Stack:Create()
 
@@ -67,7 +66,7 @@ function tratamentoComandos(s, m, c)
     print("Expressão a ser verificada")
     auxexpressao:list()
     print("Tratamento de Expressões")
-    tratamentoExpressoes(s_while,m_while, auxexpressao,nat, op)
+    tratamentoExpressoes(s_while, m, auxexpressao,nat, op)
 
     print("Saiu do tratamento de Expressões")
     s_while:list()
@@ -109,10 +108,10 @@ function tratamentoComandos(s, m, c)
       end
 
       s_while:list()
-      m_while:list()
+      --m:list()
       c:list()
 
-      tratamentoComandos(s_while, m_while, c)
+      tratamentoComandos(s_while, m, c)
 
     else
       tmp_exp = s_while:pop(1)
@@ -141,10 +140,11 @@ s = Stack:Create()
 --m = Stack:Create()
 m = {}
 m['a'] = 7
+m['b'] = 10
 c = Stack:Create()
 
 
-entrada = {"while", 1, "<", 10, "do", "a", "=", "a", "+", "1", "end"}
+entrada = {"while", "a", "<", "b", "do", "a", "=", "a", "+", "1", "end"}
 
 
 tamanho_entrada = table.maxn(entrada)
