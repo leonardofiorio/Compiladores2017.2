@@ -44,7 +44,9 @@ function tratamentoComandos(s, m, c)
 
     print("Pegar bloco comandos while")
     copia_comandos_s = Stack:Create()
+    copia_comandos_s:push("end")
     copia_comandos_c = Stack:Create()
+    copia_comandos_c:push("end")
     tmp_cmd = c:pop(1)
     while tmp_cmd ~= "end" and tmp_cmd ~= nil do
       copia_comandos_s:push(tmp_cmd)
@@ -106,15 +108,26 @@ function tratamentoComandos(s, m, c)
         tmp_cmd = copia_comandos_s:pop(1)
       end
 
-
+      s_while:list()
+      m_while:list()
       c:list()
+
+      tratamentoComandos(s_while, m_while, c)
+
     else
-      while tmp_exp ~= "end" do
-        
+      tmp_exp = s_while:pop(1)
+      while tmp_exp ~= "end" and tmp_exp ~= nil do
+        tmp_exp = s_while:pop(1)
+        print(tmp_exp)
       end
+      c:pop(1)
+
     end
 
   elseif tmp == "if" then
+
+  elseif tmp == "nil" then
+    c:pop(1)
   	
   elseif tmp == "" then
     print('end');
@@ -131,7 +144,7 @@ m['a'] = 7
 c = Stack:Create()
 
 
-entrada = {"while", 8, "<", 10, "do", "print(a)", "a", "=", "a", "+", "1", "end"}
+entrada = {"while", 1, "<", 10, "do", "a", "=", "a", "+", "1", "end"}
 
 
 tamanho_entrada = table.maxn(entrada)
