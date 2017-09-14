@@ -211,7 +211,6 @@ end
 -- -------------------------------- SMC ---------------------------------------
 
 s = Stack:Create()
-<<<<<<< HEAD
 m = Stack:Create()
 --m = {}
 --m['a'] = 7
@@ -220,17 +219,12 @@ c = Stack:Create()
 
 --entrada = {"while", 1, "<", 10, "do", "a", "=", "a", "+", "1", "end"}
 entrada = {"if", 0 , "<", 2, "then", "print('menor')", "else", "print('maior')","end" }
-=======
+
 --m = Stack:Create()
 m = {}
 m['a'] = 7
 m['b'] = 10
 c = Stack:Create()
-
-
-entrada = {"while", "a", "<", "b", "do", "a", "=", "a", "+", "1", "end"}
->>>>>>> 2a7fdbe2cdc47a48613cdee58a7941f7ff356fda
-
 
 tamanho_entrada = table.maxn(entrada)
 
