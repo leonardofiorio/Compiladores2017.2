@@ -111,8 +111,10 @@ function tratamentoComandos(s, m, c)
       s_while:list()
       m_while:list()
       c:list()
+      
 
       tratamentoComandos(s_while, m_while, c)
+
 
     else
       tmp_exp = s_while:pop(1)
@@ -125,6 +127,78 @@ function tratamentoComandos(s, m, c)
     end
 
   elseif tmp == "if" then
+    nat = Stack:Create()
+    op = Stack:Create()
+
+    print("Pegar Condição")
+    -- Pilha para separar a expressão de condição
+    copia_condicao_c = Stack:Create()
+    tmp_exp = c:pop(1)
+    while tmp_exp ~= "then" and tmp_exp ~= nil do
+      cond:push(tmp_exp)
+      auxexpressao:push(tmp_exp)
+      copia_condicao_c:push(tmp_exp)
+      tmp_exp = c:pop(1)
+    end
+
+    print("Expressão")
+    copia_condicao_c:list()
+
+
+    print("Pegar bloco comandos IF")
+    tmp_cmd = c:pop(1)
+    while tmp_cmd ~= "end" and tmp_cmd ~= nil and tmp_cmd ~="else" do
+      comandos:push(tmp_cmd)
+      tmp_cmd = c:pop(1)
+    end
+    comandos:list()
+
+    print("Comandos else")
+    comandos_else = Stack:Create()
+
+    print(tmp_cmd)
+    if tmp_cmd == "else" then
+      tmp_cmd = c:pop(1)
+      while tmp_cmd ~= "end" and tmp_cmd ~= nil do
+        comandos_else:push(tmp_cmd) 
+        tmp_cmd = c:pop(1)        
+      end
+    end
+    comandos_else:list()
+
+    -- Emṕilhando comandos_else em S
+    tmp_cmd = comandos_else:pop(1)
+    while tmp_cmd ~=nil do
+      s:push(tmp_cmd)
+      tmp_cmd = comandos_else:pop(1)
+    end
+
+    --Empilhando comandos em S
+    tmp_cmd = comandos:pop(1)
+    while tmp_cmd ~=nil do
+      s:push(tmp_cmd)
+      tmp_cmd = comandos:pop(1)
+    end
+
+    c:push("if")
+
+    tmp_exp = copia_condicao_c:pop(1)
+    while tmp_exp ~= nil do
+      c:push(tmp_exp)
+      tmp_exp = copia_condicao_c:pop(1)
+    end
+
+    print("Chamando tratamento de expressões")
+
+
+    tratamentoExpressoes(s, m, c, nat, op)
+
+    avaliacao_if = s:pop(1)
+    if avaliacao_if == "tt" then
+      
+    elseif avaliacao_if == "ff" then
+      
+    end
 
   elseif tmp == "nil" then
     c:pop(1)
@@ -138,13 +212,14 @@ end
 -- -------------------------------- SMC ---------------------------------------
 
 s = Stack:Create()
---m = Stack:Create()
-m = {}
-m['a'] = 7
+m = Stack:Create()
+--m = {}
+--m['a'] = 7
 c = Stack:Create()
 
 
-entrada = {"while", 1, "<", 10, "do", "a", "=", "a", "+", "1", "end"}
+--entrada = {"while", 1, "<", 10, "do", "a", "=", "a", "+", "1", "end"}
+entrada = {"if", 0 , "<", 2, "then", "print('menor')", "else", "print('maior')","end" }
 
 
 tamanho_entrada = table.maxn(entrada)
@@ -160,4 +235,4 @@ c:list()
 
 
 tratamentoComandos(s, m, c)
-c:list()
+
