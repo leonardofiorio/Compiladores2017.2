@@ -181,22 +181,24 @@ function tratamentoComandos(s, m, c)
 
     c:push("if")
 
-    tmp_exp = copia_condicao_c:pop(1)
-    while tmp_exp ~= nil do
-      c:push(tmp_exp)
-      tmp_exp = copia_condicao_c:pop(1)
-    end
+    -- tmp_exp = copia_condicao_c:pop(1)
+    -- while tmp_exp ~= nil do
+    --   c:push(tmp_exp)
+    --   tmp_exp = copia_condicao_c:pop(1)
+    -- end
 
     print("Chamando tratamento de expressões")
 
 
-    tratamentoExpressoes(s, m, c, nat, op)
+    c:list()
+    tratamentoExpressoes(s, m, copia_condicao_c, nat, op)
+
 
     avaliacao_if = s:pop(1)
     if avaliacao_if == "tt" then
-      
+      print('entrou no if')      
     elseif avaliacao_if == "ff" then
-      
+      print('entrou no else')
     end
 
   elseif tmp == "nil" then
@@ -217,8 +219,8 @@ m = Stack:Create()
 c = Stack:Create()
 
 
---entrada = {"while", 1, "<", 10, "do", "a", "=", "a", "+", "1", "end"}
-entrada = {"if", 0 , "<", 2, "then", "print('menor')", "else", "print('maior')","end" }
+entrada = {"if", 3 , "<=", 2, "then", "print('entrou no if')", "else", "print('entrou no else')","end" }
+-- entrada = {"while", 1, "<", 3, "do", "a", "=", "a", "+", "1", "end"}
 
 --m = Stack:Create()
 m = {}

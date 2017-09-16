@@ -44,14 +44,13 @@ function ordenarC(s, m , c, naturais, operadores)
 end 
 
 function resolverExpressoes(s, m, c, flag)
-  --print("resolverExpressoes está começando a executar")
+  -- print("resolverExpressoes está começando a executar")
 
   print("Pilha S")
   s:list()
   print("")
-  print("Pilha M")
+  -- print("Pilha M")
   --m:list()
-  print("")
   print("Pilha C")
   c:list()
   print("")
@@ -65,7 +64,6 @@ function resolverExpressoes(s, m, c, flag)
       error("Não foi possível encontrar o símbolo '"..e.."' na memória.")
     end
   end
-  --checkHere -> erro caso elemento seja palavra reservada; pegar da memoria caso seja alphabeto
   operacao = c:pop(1)
   
   aux = 0
@@ -131,10 +129,10 @@ function resolverExpressoes(s, m, c, flag)
 
   c:push(aux)
 
-  print("Pilha S depois ")
-  s:list()
-  print("Pilha C depois")
-  c:list()
+  -- print("Pilha S depois ")
+  -- s:list()
+  -- print("Pilha C depois")
+  -- c:list()
 end
 
 function pegarBoolean(b)
@@ -171,43 +169,43 @@ end
 -- -------------------------------- SMC ---------------------------------------
 
 s = Stack:Create()
-m = Stack:Create()
+m = {}
+m['a'] = 7
 c = Stack:Create()
--- v pertence a {a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z}
--- n pertence aos Naturais
 
+--------------------------------------------
 -- entrada= {4, ">" , 5, "*", 2 }
--- -- entrada = {10, "<", 10, "+", 10 , "*", 2}
--- tamanho_entrada = table.maxn(entrada)
+-- entrada = {10, "<", 10, "+", 10 , "*", 2}
+entrada = {1, "+", 3, "*", 2}
+tamanho_entrada = table.maxn(entrada)
 
--- -- i = tamanho_entrada
--- -- while i > 0 do
--- --   c:push(entrada[i])
--- --   i=i-1 
--- -- end
-
--- i = 1
--- while i <= tamanho_entrada do
+-- i = tamanho_entrada
+-- while i > 0 do
 --   c:push(entrada[i])
---   i=i+1 
+--   i=i-1 
 -- end
 
+i = 1
+while i <= tamanho_entrada do
+  c:push(entrada[i])
+  i=i+1 
+end
 
--- print("Entrada...")
--- c:list()
 
--- print("-------------------------------Tratando expressões-------------------------------")
--- -- Tratamento da expressões
--- tratamentoExpressoes(s, m, c, naturais, operadores)
--- print("Resposta final")
--- print("Pilha S")
--- s:list()
--- print("")
+print("Entrada...")
+c:list()
+
+print("-------------------------------Tratando expressões-------------------------------")
+-- Tratamento da expressões
+tratamentoExpressoes(s, m, c, naturais, operadores)
+print("Resposta final")
+print("Pilha S")
+s:list()
+print("")
 -- print("Pilha M")
 -- m:list()
--- print("")
--- print("Pilha C")
--- c:list()
--- print("")
+print("Pilha C")
+c:list()
+print("")
 
 

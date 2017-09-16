@@ -54,11 +54,18 @@ function Stack:Create()
 
   -- Imprimindo valores
   function t:list()
-  	print("=>Base da pilha<=")
+    invert = Stack:Create()
     for i,v in pairs(self._et) do
-      print(i,v)
+      invert:push(v)
     end
-    print("=>Topo da pilha<=")
+    local stack = "< "
+    top = invert:pop(1)
+    while top ~=nil do
+      stack = stack..top.." "
+      top = invert:pop(1)
+    end
+      -- print(i,v)
+    print(stack..">")
   end
   return t
 end
