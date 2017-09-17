@@ -3,7 +3,9 @@ require "pilha"
 
 -- ------------------------- Funções para resolver SMC-------------------------
 s = Stack:Create()
-m = Stack:Create()
+m = {}
+m['a'] = 7
+m['b'] = 21
 c = Stack:Create()
 
 
@@ -25,9 +27,7 @@ function resolverExpressoes(s, m, c)
     c:push("add")
     c:push(operando2)
     c:push(operando1)
-    s:list()
-    m:list()
-    c:list()
+    printSMC(s,m,c)
 
     resolverExpressoes(s,m,c)
 
@@ -47,16 +47,12 @@ function resolverExpressoes(s, m, c)
     c:push("sub")
     c:push(operando2)
     c:push(operando1)
-    s:list()
-    m:list()
-    c:list()
+    printSMC(s,m,c)
 
     -- Desempilhando operandos de C e empilhando em S
     s:push(c:pop(1))
     s:push(c:pop(1))
-    s:list()
-    m:list()
-    c:list()
+    printSMC(s,m,c)
 
     operando2 = s:pop(1)
     operando1 = s:pop(1)
@@ -74,16 +70,12 @@ function resolverExpressoes(s, m, c)
     c:push("mul")
     c:push(operando2)
     c:push(operando1)
-    s:list()
-    m:list()
-    c:list()
+    printSMC(s,m,c)
 
     -- Desempilhando operandos de C e empilhando em S
     s:push(c:pop(1))
     s:push(c:pop(1))
-    s:list()
-    m:list()
-    c:list()
+    printSMC(s,m,c)
 
     operando2 = s:pop(1)
     operando1 = s:pop(1)
@@ -148,6 +140,37 @@ function verificaOperacao(op)
 	return false
 end
  
+function printSMC(s, m, c)
+	local smc = "< "
+	stack = Stack:Create()
+	element = s:pop(1)
+	while element ~= nil do
+		stack:push(element)
+		element = s:pop(1)
+	end
+	element = stack:pop(1)
+	while element ~= nil do
+		smc = smc..element.." "
+		element = stack:pop(1)
+	end
+	smc = smc.."S, "
+	for k, v in pairs(m) do
+		smc = smc.."["..k.."]".."="..v.." "
+	end
+	smc = smc.."M, "
+	element = c:pop(1)
+	while element ~= nil do
+		stack:push(element)
+		element = c:pop(1)
+	end
+	element = stack:pop(1)
+	while element ~= nil do
+		smc = smc..element.." "
+		element = stack:pop(1)
+	end
+	smc = smc.."C >"
+	print(smc)
+end
 -- -------------------------------- SMC ---------------------------------------
 
 
@@ -161,16 +184,10 @@ c:push(entrada)
 
 print("-------------------------------Tratando expressões-------------------------------")
 -- Tratamento da expressões
-tratamentoExpressoes(s, m, c)
+-- tratamentoExpressoes(s, m, c)
 print("Resposta final")
-print("Pilha S")
-s:list()
-print("")
-print("Pilha M")
-m:list()
-print("")
-print("Pilha C")
-c:list()
-print("")
+printSMC(s,m,c)
+
+
 
 
