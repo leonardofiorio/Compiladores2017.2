@@ -6,8 +6,7 @@ require "pilha"
 function resolverExpressoes(s, m, c)
   print("Resolver Expressões")
 
-  s:list()
-  c:list()
+  printSMC(s,m,c)
 
   elemento = c:pop(1)
   
@@ -33,10 +32,7 @@ function resolverExpressoes(s, m, c)
 
       resolverExpressoes(s,m,c)
 
-      print("S")
-      s:list()
-      print("C")
-      c:list()
+      printSMC(s,m,c)
 
       valor1 = s:pop(1)
       valor2 = s:pop(1)
@@ -48,8 +44,7 @@ function resolverExpressoes(s, m, c)
 
       s:push(resultado)
 
-      s:list()
-      c:list()
+      printSMC(s,m,c)
 
       resolverExpressoes(s,m,c)
 
@@ -69,10 +64,7 @@ function resolverExpressoes(s, m, c)
 
       resolverExpressoes(s,m,c)
 
-      print("S")
-      s:list()
-      print("C")
-      c:list()
+      printSMC(s,m,c)
 
       valor1 = s:pop(1)
       valor2 = s:pop(1)
@@ -84,8 +76,7 @@ function resolverExpressoes(s, m, c)
 
       s:push(resultado)
 
-      s:list()
-      c:list()
+      printSMC(s,m,c)
 
       resolverExpressoes(s,m,c)
 
@@ -105,10 +96,7 @@ function resolverExpressoes(s, m, c)
 
       resolverExpressoes(s,m,c)
 
-      print("S")
-      s:list()
-      print("C")
-      c:list()
+      printSMC(s,m,c)
 
       valor1 = s:pop(1)
       valor2 = s:pop(1)
@@ -120,8 +108,7 @@ function resolverExpressoes(s, m, c)
 
       s:push(resultado)
 
-      s:list()
-      c:list()
+      printSMC(s,m,c)
 
       resolverExpressoes(s,m,c)
     end
@@ -177,32 +164,28 @@ end
 function printSMC(s, m, c)
 	local smc = "< "
 	stack = Stack:Create()
-	element = s:pop(1)
-	while element ~= nil do
-		stack:push(element)
-		element = s:pop(1)
-	end
+  for i,v in pairs(s._et) do
+    stack:push(v)
+  end
 	element = stack:pop(1)
 	while element ~= nil do
 		smc = smc..element.." "
 		element = stack:pop(1)
 	end
 	smc = smc.."S, "
-	for k, v in pairs(m) do
-		smc = smc.."["..k.."]".."="..v.." "
+	for i, v in pairs(m) do
+		smc = smc.."["..i.."]".."="..v.." "
 	end
 	smc = smc.."M, "
-	element = c:pop(1)
-	while element ~= nil do
-		stack:push(element)
-		element = c:pop(1)
-	end
-	element = stack:pop(1)
-	while element ~= nil do
-		smc = smc..element.." "
-		element = stack:pop(1)
-	end
-	smc = smc.."C >"
+	for i,v in pairs(c._et) do
+    stack:push(v)
+  end
+  element = stack:pop(1)
+  while element ~= nil do
+    smc = smc..element.." "
+    element = stack:pop(1)
+  end
+	smc = smc.."C >\n"
 	print(smc)
 end
 -- -------------------------------- SMC ---------------------------------------
@@ -216,12 +199,12 @@ c = Stack:Create()
 entrada = "mul(5,add(2,8))"
 print("Entrada...")
 c:push(entrada)
-print(entrada)
-c:list()
+printSMC(s,m,c)
+-- c:list()
 
 print("-------------------------------Tratando expressões-------------------------------")
 -- Tratamento da expressões
 resolverExpressoes(s, m, c)
 print("Resposta final")
---printSMC(s,m,c)
+printSMC(s,m,c)
 
