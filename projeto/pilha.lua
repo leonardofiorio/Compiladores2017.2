@@ -23,9 +23,9 @@ function Stack:Create()
   end
 
   -- Removendo valores da pilha
-  function t:pop(num)
+   function t:pop(num)
 
-    -- Quantidade de valores a serem removidos  
+    -- get num values from stack
     local num = num or 1
 
     -- return table
@@ -39,8 +39,7 @@ function Stack:Create()
         -- remove last value
         table.remove(self._et)
       else
-      	return nil
-        --break
+        break
       end
     end
     -- return unpacked entries
@@ -53,19 +52,27 @@ function Stack:Create()
   end
 
   -- Imprimindo valores
+  -- function t:list()
+  --   invert = Stack:Create()
+  --   for i,v in pairs(self._et) do
+  --     invert:push(v)
+  --   end
+  --   local stack = "< "
+  --   top = invert:pop(1)
+  --   while top ~=nil do
+  --     stack = stack..top.." "
+  --     top = invert:pop(1)
+  --   end
+  --     -- print(i,v)
+  --   print(stack..">")
+  -- end
+
   function t:list()
-    invert = Stack:Create()
+    print("=>Base da pilha<=")
     for i,v in pairs(self._et) do
-      invert:push(v)
+      print(i,v)
     end
-    local stack = "< "
-    top = invert:pop(1)
-    while top ~=nil do
-      stack = stack..top.." "
-      top = invert:pop(1)
-    end
-      -- print(i,v)
-    print(stack..">")
+    print("=>Topo da pilha<=")
   end
   return t
 end
