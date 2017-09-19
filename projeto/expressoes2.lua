@@ -11,6 +11,9 @@ function resolverExpressoes(s, m, c)
   elemento = c:pop(1)
   
   if elemento ~= nil then
+    if(type(elemento) ~= "number") then
+      elemento = loadFromMemory(elemento, m)
+    end
     if tonumber(elemento) ~= nil then
       numero = tonumber(elemento)
       s:push(numero)
@@ -33,6 +36,15 @@ function resolverExpressoes(s, m, c)
   end
 end 
 
+function loadFromMemory(elemento, m)
+    local e = elemento
+    e = m[e]
+    if e ~= nil then
+      elemento = e
+    end
+    return elemento
+end
+
 function soma(s,m,c)
 -- Separando operandos
   operando1 = string.sub(elemento, 5, identificarVirgula(elemento)[1])
@@ -52,6 +64,8 @@ function soma(s,m,c)
   valor1 = s:pop(1)
   valor2 = s:pop(1)
 
+  print('------------------------------------VALOR1 = '..valor1)
+  print('------------------------------------VALOR2 = '..valor2)
   resultado = tonumber(valor1) + tonumber(valor2)
 
   s:push(resultado)
@@ -214,7 +228,8 @@ m['b'] = 21
 c = Stack:Create()
 
 
-entrada = "mul(add(2,5),add(2,8))"
+entrada = "mul(add(2,5),add(b,a))"
+-- entrada = "add(5,a)"
 print("Entrada...")
 c:push(entrada)
 printSMC(s,m,c)
