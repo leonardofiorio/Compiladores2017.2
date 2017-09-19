@@ -18,100 +18,135 @@ function resolverExpressoes(s, m, c)
       return numero
     elseif string.sub(elemento, 0, 4) == "add(" then
       print("Resolvendo Soma")
-
-      -- Separando operandos
-      operando1 = string.sub(elemento, 5, identificarVirgula(elemento)[1])
-      operando2 = string.sub(elemento, identificarVirgula(elemento)[1] + 2 , string.len(elemento)-1)
-
-      -- Empilhando em C como pósfixada
-      print("Empilhando em C como pósfixado")
-      c:push("add")
-      c:push(operando2)
-      c:push(operando1)
-      --printSMC(s,m,c)
-
-      resolverExpressoes(s,m,c)
-
-      printSMC(s,m,c)
-
-      valor1 = s:pop(1)
-      valor2 = s:pop(1)
-
-      print("Valor 1", valor1)
-      print("Valor 2", valor2)
-
-      resultado = tonumber(valor1) + tonumber(valor2)
-
-      s:push(resultado)
-
-      printSMC(s,m,c)
-
-      resolverExpressoes(s,m,c)
+      soma(s,m,c)     
 
     elseif string.sub(elemento, 0, 4) == "sub(" then
       print("Resolvendo Subtração")
-
-      -- Separando operandos
-      operando1 = string.sub(elemento, 5, identificarVirgula(elemento)[1])
-      operando2 = string.sub(elemento, identificarVirgula(elemento)[1] + 2 , string.len(elemento)-1)
-
-      -- Empilhando em C como pósfixada
-      print("Empilhando em C como pósfixado")
-      c:push("sub")
-      c:push(operando2)
-      c:push(operando1)
-      --printSMC(s,m,c)
-
-      resolverExpressoes(s,m,c)
-
-      printSMC(s,m,c)
-
-      valor1 = s:pop(1)
-      valor2 = s:pop(1)
-
-      print("Valor 1", valor1)
-      print("Valor 2", valor2)
-
-      resultado = tonumber(valor2) - tonumber(valor1)
-
-      s:push(resultado)
-
-      printSMC(s,m,c)
-
-      resolverExpressoes(s,m,c)
+      subtracao(s,m,c)
+      
 
     elseif string.sub(elemento, 0 , 4) == "mul(" then
       print("Resolvendo Multiplicação")
-
-      -- Separando operandos
-      operando1 = string.sub(elemento, 5, identificarVirgula(elemento)[1])
-      operando2 = string.sub(elemento, identificarVirgula(elemento)[1] + 2 , string.len(elemento)-1)
-
-      -- Empilhando em C como pósfixada
-      print("Empilhando em C como pósfixado")
-      c:push("mul")
-      c:push(operando2)
-      c:push(operando1)
-      --printSMC(s,m,c)
-
-      resolverExpressoes(s,m,c)
-
-      printSMC(s,m,c)
-
-      valor1 = s:pop(1)
-      valor2 = s:pop(1)
-
-      print("Valor 1", valor1)
-      print("Valor 2", valor2)
-
-      resultado = tonumber(valor1) * tonumber(valor2)
-
-      s:push(resultado)
-
-      printSMC(s,m,c)
-
-      resolverExpressoes(s,m,c)
+      multiplicacao(s,m,c)
+      
     end
+  end
+end 
+
+function soma(s,m,c)
+-- Separando operandos
+  operando1 = string.sub(elemento, 5, identificarVirgula(elemento)[1])
+  operando2 = string.sub(elemento, identificarVirgula(elemento)[1] + 2 , string.len(elemento)-1)
+
+  -- Empilhando em C como pósfixada
+  print("Empilhando em C como pósfixado")
+  c:push("add")
+  c:push(operando2)
+  c:push(operando1)
+  --printSMC(s,m,c)
+
+  resolverExpressoes(s,m,c)
+
+  printSMC(s,m,c)
+
+  valor1 = s:pop(1)
+  valor2 = s:pop(1)
+
+  resultado = tonumber(valor1) + tonumber(valor2)
+
+  s:push(resultado)
+
+  printSMC(s,m,c)
+
+  resolverExpressoes(s,m,c)
+end
+
+function subtracao(s,m,c)
+-- Separando operandos
+  operando1 = string.sub(elemento, 5, identificarVirgula(elemento)[1])
+  operando2 = string.sub(elemento, identificarVirgula(elemento)[1] + 2 , string.len(elemento)-1)
+
+  -- Empilhando em C como pósfixada
+  print("Empilhando em C como pósfixado")
+  c:push("sub")
+  c:push(operando2)
+  c:push(operando1)
+  --printSMC(s,m,c)
+
+  resolverExpressoes(s,m,c)
+
+  printSMC(s,m,c)
+
+  valor1 = s:pop(1)
+  valor2 = s:pop(1)
+
+
+  resultado = tonumber(valor2) - tonumber(valor1)
+
+  s:push(resultado)
+
+  printSMC(s,m,c)
+
+  resolverExpressoes(s,m,c)
+end
+
+function multiplicacao(s,m,c)
+-- Separando operandos
+  operando1 = string.sub(elemento, 5, identificarVirgula(elemento)[1])
+  operando2 = string.sub(elemento, identificarVirgula(elemento)[1] + 2 , string.len(elemento)-1)
+
+  -- Empilhando em C como pósfixada
+  print("Empilhando em C como pósfixado")
+  c:push("mul")
+  c:push(operando2)
+  c:push(operando1)
+  --printSMC(s,m,c)
+
+  resolverExpressoes(s,m,c)
+
+  printSMC(s,m,c)
+
+  valor1 = s:pop(1)
+  valor2 = s:pop(1)
+
+  resultado = tonumber(valor1) * tonumber(valor2)
+
+  s:push(resultado)
+
+  printSMC(s,m,c)
+
+  resolverExpressoes(s,m,c)
+
+end
+
+function resolverExpressaoBooleana(s,m,c)
+  print("Resolver Expressões Booleanas")
+
+  printSMC(s,m,c)
+
+  elemento = c:pop(1)
+
+  if elemento ~= nil then
+    if string.sub(elemento,1,1) == "~" then 
+      print("Negação")
+      valor = string.sub(elemento, 2, string.len(elemento))
+      c:push("~")
+      c:push(valor)
+
+      resolverExpressoes(s,m,c)
+      
+
+      if elemento == "tt" then
+        s:push("ff")
+      else
+        s:push("tt")
+      end
+      c:pop(1)
+    else
+      elemento = c:pop(1)
+      s:push(elemento)
+      c:pop(1)
+    end 
   end
 end
 
@@ -144,23 +179,6 @@ function identificarVirgula(operacao)
 end
 
 
--- Essa função retorna valor boolean para identificar se valor passado como parâmetro
--- é uma operação aceita pela linguagem ou outro componente da linguagem
-function verificaOperacao(op)
-	if op == "+" or 
-    op == "-" or 
-    op == "*" or
-    op == ">" or
-    op == "<" or
-    op == "==" or
-    op == ">=" or
-    op == "<=" or
-    op == "!=" then 
-		return true
-	end
-	return false
-end
- 
 function printSMC(s, m, c)
 	local smc = "< "
 	stack = Stack:Create()
@@ -196,7 +214,7 @@ m['b'] = 21
 c = Stack:Create()
 
 
-entrada = "mul(5,add(2,8))"
+entrada = "mul(add(2,5),add(2,8))"
 print("Entrada...")
 c:push(entrada)
 printSMC(s,m,c)
@@ -208,3 +226,8 @@ resolverExpressoes(s, m, c)
 print("Resposta final")
 printSMC(s,m,c)
 
+
+-- entrada_booleana = "~tt"
+-- c:push(entrada_booleana)
+-- resolverExpressaoBooleana(s,m,c)
+-- printSMC(s,m,c)
