@@ -64,8 +64,6 @@ function soma(s,m,c)
   valor1 = s:pop(1)
   valor2 = s:pop(1)
 
-  print('------------------------------------VALOR1 = '..valor1)
-  print('------------------------------------VALOR2 = '..valor2)
   resultado = tonumber(valor1) + tonumber(valor2)
 
   s:push(resultado)
@@ -228,7 +226,7 @@ m['b'] = 21
 c = Stack:Create()
 
 
-entrada = "mul(add(2,5),add(b,a))"
+entrada = "mul(add(2,5),add(2,a))"
 -- entrada = "add(5,a)"
 print("Entrada...")
 c:push(entrada)
