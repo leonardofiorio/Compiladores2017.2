@@ -82,7 +82,7 @@ function Bintree:removeLeaf(data)
     end
 end
 
-function Bintree:getSibling(data)
+function Bintree:getSibling(data)   
     if data == self.data then
         return nil
     end
@@ -167,6 +167,18 @@ function Bintree.show2(node, level, d)
         Bintree.show2(node.left, level + 1, 'L_')
         Bintree.show2(node.right, level + 1, 'R_')
     end
+end
+
+function Bintree.getData(node)
+    return node.data
+end
+
+function Bintree.getLeft(node)
+    return node.left
+end
+
+function Bintree.getRight(node)
+    return node.right
 end
 
 return Bintree
