@@ -1,5 +1,6 @@
 -- Incluindo implementação da pilha
 require "pilha"
+local bintree = require "bintree"
 
 -- ------------------------- Funções para resolver SMC-------------------------
 
@@ -239,6 +240,14 @@ resolverExpressoes(s, m, c)
 print("Resposta final")
 printSMC(s,m,c)
 
+local ast = node("mul", 
+  node("33", nil, nil), 
+  node("add",
+   node("10", nil, nil), 
+   node("5", nil, nil))
+  )
+-- ast3:addRight(ast)
+bintree.show(ast)
 
 -- entrada_booleana = "~tt"
 -- c:push(entrada_booleana)

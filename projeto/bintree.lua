@@ -11,6 +11,10 @@ function Bintree.new(data, left, right)
    return setmetatable(node,Bintree)
 end
 
+function node(data, left, right)
+  return Bintree.new(data, left, right)
+end
+
 function Bintree:addLeft(child)
     if self ~= nil then
         self.left = child
