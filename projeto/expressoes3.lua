@@ -1,5 +1,5 @@
 require "pilha" -- Incluindo implementação da pilha
-local bintree = require "bintree" -- Importando implementação de árvore 
+local tree = require "tree" -- Importando implementação de árvore 
 
 s = Stack:Create() -- Criando pilha para S
 m = {} -- Criando vetor para M
@@ -22,7 +22,7 @@ end
 function resolverExpressoes(s,m,c,ast)
   
   if ast ~= nil then
-    local data = bintree.getData(ast)  
+    local data = ast.data
 
     if (tonumber(data) ~= nil) then
       num = tonumber(data)
@@ -34,7 +34,7 @@ function resolverExpressoes(s,m,c,ast)
       print("Expressão pósfixada em C")
       c:push("add")
       printSMC(s,m,c)
-      resultado = resolverExpressoes(s,m,c, bintree.getLeft(ast)) + resolverExpressoes(s,m,c, bintree.getRight(ast))
+      resultado = resolverExpressoes(s,m,c, ast.children[1]) + resolverExpressoes(s,m,c, ast.children[2])
       s:pop(1)
       s:push(resultado)
       c:pop(1)
@@ -48,7 +48,7 @@ function resolverExpressoes(s,m,c,ast)
       print("Expressão pósfixada em C")
       c:push("sub")
       printSMC(s,m,c)
-      resultado = resolverExpressoes(s,m,c, bintree.getLeft(ast)) - resolverExpressoes(s,m,c, bintree.getRight(ast))
+      resultado = resolverExpressoes(s,m,c, ast.children[1]) - resolverExpressoes(s,m,c, ast.children[2])
       s:pop(1)
       s:push(resultado)
       c:pop(1)
@@ -62,7 +62,9 @@ function resolverExpressoes(s,m,c,ast)
       print("Expressão pósfixada em C")
       c:push("mul")
       printSMC(s,m,c)
-      resultado = resolverExpressoes(s,m,c, bintree.getLeft(ast)) * resolverExpressoes(s,m,c, bintree.getRight(ast))
+      local node1
+      local node2
+  	  resultado = resolverExpressoes(s,m,c, ast.children[1]) * resolverExpressoes(s,m,c, ast.children[2])
       s:pop(1)
       s:push(resultado)
       c:pop(1)
@@ -107,10 +109,16 @@ end
 --local ast = node("add",
 --  node("add", node("10", nil, nil), node("2",nil,nil)),
  --    node("5", nil, nil))
-local ast = node("mul", node("2",nil,nil), (node("add",node("3",nil,nil), node("1", nil, nil)) ) )
---local ast = node("add", node("2",nil,nil), node("3",nil,nil))
 
-bintree.show(ast)
+local ast = node("mul", {
+		node("2",nil),
+		node("add", {
+			node("3",nil),
+			node("1",nil)
+			})
+	})
+
+tree.show(ast)
 
 resolverExpressoes(s,m,c,ast)
 
