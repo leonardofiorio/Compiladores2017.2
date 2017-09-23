@@ -27,7 +27,7 @@ function resolverExpressoes(s,m,c,ast)
   	elseif lpeg.match(boolVal, data) then
       c:push(data)
       printSMC(s,m,c)
-      return toBool(data)
+      return data
 
     elseif data == "add" then
       print("ADD")
@@ -109,7 +109,7 @@ function resolverExpressoes(s,m,c,ast)
       printSMC(s,m,c)
       local val1 = resolverExpressoes(s,m,c, ast.children[1])
       local val2 = resolverExpressoes(s,m,c, ast.children[2])
-      resultado = getBoolean(val1 or val2)
+      resultado = getBoolean(toBool(val1) or toBool(val2))
       s:pop(1)
       s:push(resultado)
       if(val1) then
@@ -137,8 +137,10 @@ end
 function toBool(b)
 	if b == "tt" then
 		return true
-	else
+	elseif b == "ff" then
 		return false
+	else
+		return b
 	end
 end
 
@@ -220,10 +222,14 @@ end
 -- 			})
 -- 	})
 
-local ast = node("or", {
-		node("ff",nil),
-		node("tt",nil)
-	})
+-- local ast = node("or", {
+-- 		node("ff",nil),
+-- 		node("eq", {
+-- 			node("a",nil),
+-- 			node("8",nil)
+-- 			})
+-- 	})
+
 
 tree.show(ast)
 
