@@ -10,19 +10,10 @@ m['b'] = 21
 
 c = Stack:Create() -- Criando pilha para C
 
-function loadFromMemory(elemento, m)
-    local e = elemento
-    e = m[e]
-    if e ~= nil then
-      elemento = e
-    end
-    return elemento
-end
-
 function resolverExpressoes(s,m,c,ast)
   
   if ast ~= nil then
-    local data = ast.data
+    local data = getData(ast, m)
 
     if (tonumber(data) ~= nil) then
       num = tonumber(data)
@@ -37,9 +28,7 @@ function resolverExpressoes(s,m,c,ast)
       resultado = resolverExpressoes(s,m,c, ast.children[1]) + resolverExpressoes(s,m,c, ast.children[2])
       s:pop(1)
       s:push(resultado)
-      c:pop(1)
-      c:pop(1)
-      c:pop(1)
+      c:pop(3)
       printSMC(s,m,c)
       return resultado
 
@@ -51,29 +40,87 @@ function resolverExpressoes(s,m,c,ast)
       resultado = resolverExpressoes(s,m,c, ast.children[1]) - resolverExpressoes(s,m,c, ast.children[2])
       s:pop(1)
       s:push(resultado)
-      c:pop(1)
-      c:pop(1)
-      c:pop(1)
+      c:pop(3)
       printSMC(s,m,c)
       return resultado
       
     elseif data == "mul" then
-            print("MUL")
+      print("MUL")
       print("Expressão pósfixada em C")
       c:push("mul")
       printSMC(s,m,c)
-      local node1
-      local node2
-  	  resultado = resolverExpressoes(s,m,c, ast.children[1]) * resolverExpressoes(s,m,c, ast.children[2])
+      resultado = resolverExpressoes(s,m,c, ast.children[1]) * resolverExpressoes(s,m,c, ast.children[2])
       s:pop(1)
       s:push(resultado)
-      c:pop(1)
-      c:pop(1)
-      c:pop(1)
+      c:pop(3)
       printSMC(s,m,c)
       return resultado
+
+  	elseif data == "eq" then
+      print("EQ")
+      print("Expressão pósfixada em C")
+      c:push("eq")
+      printSMC(s,m,c)
+      resultado = getBoolean(resolverExpressoes(s,m,c, ast.children[1]) == resolverExpressoes(s,m,c, ast.children[2]))
+      s:pop(1)
+      s:push(resultado)
+      c:pop(3)
+      printSMC(s,m,c)
+      return resultado
+
+  	elseif data == "not" then
+      print("NOT")
+      print("Expressão pósfixada em C")
+      c:push("not")
+      printSMC(s,m,c)
+      resultado = getNot(resolverExpressoes(s,m,c, ast.children[1], true))
+      s:pop(1)
+      s:push(resultado)
+      c:pop(2)--dois pops?
+      printSMC(s,m,c)
+      return resultado
+
+  	elseif data == "att" then --attribution
+      print("ATT")
+      print("Expressão pósfixada em C")
+      c:push("att")
+      printSMC(s,m,c)
+      local var = ast.children[1].data
+      c:push(var)
+      m[var] = resolverExpressoes(s,m,c, ast.children[2])
+      s:pop(1)
+      c:pop(3)
+      printSMC(s,m,c)
+      return
+
     end
   end
+end
+
+function getData(node, m)
+	local data = node.data
+	local e = data
+    e = m[e]
+    if e ~= nil then
+      data = e
+    end
+    return data
+end
+
+function getBoolean(b)
+	if b then
+		return "tt"
+  	else
+	    return "ff"
+  	end
+end
+
+function getNot(b)
+	if b == "tt" then
+		return "ff"
+	else
+		return "tt"
+	end
 end
 
 -- Função para impressão das pilhas SMC no formato de leitura
@@ -105,16 +152,36 @@ function printSMC(s, m, c)
 	print(smc)
 end
 
--- Declarando árvore 
---local ast = node("add",
---  node("add", node("10", nil, nil), node("2",nil,nil)),
- --    node("5", nil, nil))
+-- local ast = node("mul", {
+-- 		node("2",nil),
+-- 		node("add", {
+-- 			node("3",nil),
+-- 			node("1",nil)
+-- 			})
+-- 	})
 
-local ast = node("mul", {
-		node("2",nil),
+-- local ast = node("eq", {
+-- 		node("2",nil),
+-- 		node("3",nil)
+-- 	})
+
+-- local ast = node("not", {
+-- 		node("eq", {
+-- 			node("2",nil),
+-- 			node("2",nil)
+-- 		})
+-- 	})
+
+-- local ast = node("att", {
+-- 		node("a",nil),
+-- 		node("143",nil)
+-- 	})
+
+local ast = node("att", {
+		node("a",nil),
 		node("add", {
-			node("3",nil),
-			node("1",nil)
+			node("a",nil),
+			node("a",nil)
 			})
 	})
 
