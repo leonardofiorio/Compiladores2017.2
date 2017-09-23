@@ -1,5 +1,8 @@
 require "pilha" -- Incluindo implementação da pilha
 local tree = require "tree" -- Importando implementação de árvore 
+local lpeg = require"lpeg"
+
+local boolVal = lpeg.S"tt" + lpeg.S"ff"
 
 s = Stack:Create() -- Criando pilha para S
 m = {} -- Criando vetor para M
@@ -20,6 +23,12 @@ function resolverExpressoes(s,m,c,ast)
       c:push(num)
       printSMC(s,m,c)
       return num
+
+  	elseif lpeg.match(boolVal, data) then
+      c:push(data)
+      printSMC(s,m,c)
+      return toBool(data)
+
     elseif data == "add" then
       print("ADD")
       print("Expressão pósfixada em C")
@@ -93,6 +102,24 @@ function resolverExpressoes(s,m,c,ast)
       printSMC(s,m,c)
       return
 
+  	elseif data == "or" then
+      print("OR")
+      print("Expressão pósfixada em C")
+      c:push("or")
+      printSMC(s,m,c)
+      local val1 = resolverExpressoes(s,m,c, ast.children[1])
+      local val2 = resolverExpressoes(s,m,c, ast.children[2])
+      resultado = getBoolean(val1 or val2)
+      s:pop(1)
+      s:push(resultado)
+      if(val1) then
+      	c:pop(2)
+      else
+      	c:pop(3)
+      end
+      printSMC(s,m,c)
+      return resultado
+
     end
   end
 end
@@ -105,6 +132,14 @@ function getData(node, m)
       data = e
     end
     return data
+end
+
+function toBool(b)
+	if b == "tt" then
+		return true
+	else
+		return false
+	end
 end
 
 function getBoolean(b)
@@ -177,12 +212,17 @@ end
 -- 		node("143",nil)
 -- 	})
 
-local ast = node("att", {
-		node("a",nil),
-		node("add", {
-			node("a",nil),
-			node("a",nil)
-			})
+-- local ast = node("att", {
+-- 		node("a",nil),
+-- 		node("add", {
+-- 			node("a",nil),
+-- 			node("a",nil)
+-- 			})
+-- 	})
+
+local ast = node("or", {
+		node("ff",nil),
+		node("tt",nil)
 	})
 
 tree.show(ast)
