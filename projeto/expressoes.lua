@@ -71,7 +71,7 @@ function resolverExpressoes(s,m,c,ast)
       c:push("eq")
       printSMC(s,m,c)
       resultado = getBoolean(resolverExpressoes(s,m,c, ast.children[1]) == resolverExpressoes(s,m,c, ast.children[2]))
-      s:pop(1)
+      --s:pop(1)
       s:push(resultado)
       c:pop(3)
       printSMC(s,m,c)
@@ -184,9 +184,28 @@ function printSMC(s, m, c)
   while element ~= nil do
     smc = smc..element.." "
     element = stack:pop(1)
-  end
+   end
 	smc = smc.."C >\n"
 	print(smc)
+end
+
+function getString(ast)
+  local s = ""
+  if ast ~=nil then
+    if (ast.data == "add") or (ast.data == "sub") or (ast.data == "mul") or 
+      (ast.data == "eq") or (ast.data == "att") or (ast.data == "or") then
+      if ast.children ~= nil then
+        s = s .. "(" .. ast.data .. " " .. getString(ast.children[1]).. " " .. getString(ast.children[2]) .. ")"
+      else
+        s = ast.data
+      end
+      return s
+    elseif ast.data == "not" then
+       s = s .. "not " .. getString(ast.children[1])
+    else
+      return ast.data
+    end
+  end
 end
 
 -- local ast = node("mul", {
@@ -233,7 +252,7 @@ end
 
 tree.show(ast)
 
-resolverExpressoes(s,m,c,ast)
+--resolverExpressoes(s,m,c,ast)
 
 print()
 print("Resultado final: ")
