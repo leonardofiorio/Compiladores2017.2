@@ -254,8 +254,8 @@ tree.show(ast)
 
 --resolverExpressoes(s,m,c,ast)
 
-print()
-print("Resultado final: ")
-printSMC(s,m,c)
+-- print()
+-- print("Resultado final: ")
+-- printSMC(s,m,c)
 
 

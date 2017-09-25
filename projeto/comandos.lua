@@ -1,6 +1,8 @@
 expressoes = require "expressoes"
-tree = require "tree"
+local tree = require "tree"
+local lpeg = require"lpeg"
 
+local exp = lpeg.S"add" + lpeg.S"sub" + lpeg.S"mul" + lpeg.S"eq" + lpeg.S"not" + lpeg.S"att" + lpeg.S"or"
 
 function resolverComandos(s,m,c, ast)
 	local data
@@ -12,8 +14,7 @@ function resolverComandos(s,m,c, ast)
 
 	print("Data: ",data)
 
-	if data == "add" or data == "sub" or data == "mul" or data == "eq" or data == "not" 
-		or data == "att" or data == "or" or data=="and" then
+	if lpeg.match(exp, data) then
 		s:pop(1)
 		return resolverExpressoes(s,m,c, ast)
 
@@ -108,11 +109,34 @@ end
 
 
 -- while
- local ast = node("while", {node("eq", {node("1", nil), node("2", nil)}), 
- 		node("and", {node("tt", nil), node("tt", nil)})})
+ -- local ast = node("while", {
+ -- 	node("eq", {
+ -- 		node("1", nil), 
+ -- 		node("2", nil)
+ -- 		}), 
+ -- 		node("att", {
+ -- 			node("a", nil), 
+ -- 			node("add", {
+ -- 				node("a", nil), 
+ -- 				node("1", nil) 
+ -- 				})
+ -- 			})
+ -- 		})
 
---local ast = node("if", {node("eq", {node("1",nil), node("5",nil)}), 
---	node("eq", {node("2",nil), node("2", nil)}), node("not", {node("ff", nil)})})
+local ast = node("if", {
+	node("eq", {
+		node("5",nil), 
+		node("4",nil)
+		}), 
+	node("att", { --then
+		node("a",nil), 
+		node("2", nil)
+		}), 
+	node("att", { --else
+		node("a", nil),
+		node("3", nil)
+		})
+	})
 
 tree.show(ast)
 
