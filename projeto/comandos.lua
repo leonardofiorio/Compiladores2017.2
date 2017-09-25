@@ -19,13 +19,8 @@ function resolverComandos(s,m,c, ast)
 		return resolverExpressoes(s,m,c, ast)
 
 	elseif data == "while" then
-		if ast ~= nil then
-			conditional = getString(ast.children[1])
-			commands = getString(ast.children[2])
-		else
-
-		end
-
+		conditional = getString(ast.children[1])
+		commands = getString(ast.children[2])
 
 		print("Resolvendo while")
 		-- Empilhando while em C
@@ -52,14 +47,17 @@ function resolverComandos(s,m,c, ast)
 		if s:pop(1) == "tt" then
 			-- Bloco de comandos
 			resolverComandos(s,m,c, ast.children[2])
-			c:pop(1)
+			printSMC(s,m,c)
 
+			c:pop(1)
 			c:push(commands)
 			c:push("do")
 			c:push(conditional)
 			c:push("while")
 			c:push(commands)
-			print("Executando comandos")
+			c:pop(5)
+			s:pop(1)
+			print("Reexecutando")
 			resolverComandos(s,m,c, ast)
 			printSMC(s,m,c,nil)
 			return
@@ -123,20 +121,24 @@ end
  -- 			})
  -- 		})
 
-local ast = node("if", {
-	node("eq", {
-		node("5",nil), 
-		node("4",nil)
-		}), 
-	node("att", { --then
-		node("a",nil), 
-		node("2", nil)
-		}), 
-	node("att", { --else
-		node("a", nil),
-		node("3", nil)
-		})
-	})
+-- local ast = node("if", {
+-- 	node("eq", {
+-- 		node("5",nil), 
+-- 		node("4",nil)
+-- 		}), 
+-- 	node("att", { --then
+-- 		node("a",nil), 
+-- 		node("2", nil)
+-- 		}), 
+-- 	node("att", { --else
+-- 		node("a", nil),
+-- 		node("3", nil)
+-- 		})
+-- 	})
+
+local ast = node("while", 
+	{node("eq", {node("1", nil), node("1", nil)}) 
+	, node("eq", {node("1", nil), node("2", nil)})})
 
 tree.show(ast)
 
@@ -144,4 +146,4 @@ resolverComandos(s, m, c, ast)
 printSMC(s,m,c)
 
 -- if
--- local ast = node(";", {node("<", {node("1", nil), node("2", nil)}), node("", ) , node("", )})
+--local ast = node(";", {node("<", {node("1", nil), node("2", nil)}), node("", ) , node("", )})
