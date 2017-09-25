@@ -8,8 +8,10 @@ s = Stack:Create() -- Criando pilha para S
 m = {} -- Criando vetor para M
 
 -- Inicializando memória com valores 
-m['a'] = 7
-m['b'] = 21
+-- m['a'] = 7
+-- m['b'] = 21
+m['result'] = 1
+m['fat'] = 5
 
 c = Stack:Create() -- Criando pilha para C
 
@@ -119,6 +121,11 @@ function resolverExpressoes(s,m,c,ast)
       end
       printSMC(s,m,c)
       return resultado
+
+    elseif data == ";" then
+      for _,child in ipairs(ast.children) do
+        resolverExpressoes(s,m,c, child)
+      end
 
     end
   end

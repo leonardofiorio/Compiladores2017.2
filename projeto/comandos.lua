@@ -2,7 +2,7 @@ expressoes = require "expressoes"
 local tree = require "tree"
 local lpeg = require"lpeg"
 
-local exp = lpeg.S"add" + lpeg.S"sub" + lpeg.S"mul" + lpeg.S"eq" + lpeg.S"not" + lpeg.S"att" + lpeg.S"or"
+local exp = lpeg.S"add" + lpeg.S"sub" + lpeg.S"mul" + lpeg.S"eq" + lpeg.S"not" + lpeg.S"att" + lpeg.S"or" + lpeg.S";"
 
 function resolverComandos(s,m,c, ast)
 	local data
@@ -11,8 +11,6 @@ function resolverComandos(s,m,c, ast)
 	else
 		data = c:pop(1)
 	end
-
-	print("Data: ",data)
 
 	if lpeg.match(exp, data) then
 		s:pop(1)
@@ -109,17 +107,69 @@ end
 -- while
  -- local ast = node("while", {
  -- 	node("eq", {
- -- 		node("1", nil), 
- -- 		node("2", nil)
+ -- 		node("a", nil), 
+ -- 		node("7", nil)
  -- 		}), 
  -- 		node("att", {
  -- 			node("a", nil), 
  -- 			node("add", {
  -- 				node("a", nil), 
- -- 				node("1", nil) 
+ -- 				node("3", nil) 
  -- 				})
  -- 			})
  -- 		})
+
+local ast = node(";", {
+		node("att", {
+			node("a",nil),
+			node("13",nil)
+			}),
+		node("att", {
+			node("b",nil),
+			node("14",nil)
+			})
+	})
+
+ -- local ast = node("while", {
+ -- 	node("not", {
+ -- 		node("eq", {
+ -- 			node("a",nil),
+ -- 			node("10",nil),
+ -- 			})
+ -- 		}),
+ -- 	node("att", {
+ -- 		node("a",nil),
+ -- 		node("add", {
+ -- 			node("a",nil),
+ -- 			node("1",nil)
+ -- 			})
+ -- 		})
+ -- 	})
+
+ local ast = node("while", { --fatorial
+ 	node("not", {
+ 		node("eq", {
+ 			node("fat",nil),
+ 			node("0",nil),
+ 			})
+ 		}),
+ 	node(";", {
+ 			node("att", {
+	 		node("result",nil),
+	 		node("mul", {
+	 			node("result",nil),
+	 			node("fat",nil)
+	 			})
+	 		}),
+	 	node("att", {
+	 		node("fat",nil),
+	 		node("sub", {
+	 			node("fat",nil),
+	 			node("1",nil)
+	 			})
+	 		})
+ 		})
+ 	})
 
 -- local ast = node("if", {
 -- 	node("eq", {
@@ -136,12 +186,19 @@ end
 -- 		})
 -- 	})
 
-local ast = node("while", 
-	{node("eq", {node("1", nil), node("1", nil)}) 
-	, node("eq", {node("1", nil), node("2", nil)})})
+-- local ast = node("while", {
+-- 	node("eq", {
+-- 		node("a", nil), 
+-- 		node("1", nil)
+-- 		}), 
+-- 	node("att", {
+-- 		node("1", nil), 
+-- 		node("2", nil)
+-- 		})
+-- 	})
 
+print("\n\n\n\n\n\nÁrvore:\n")
 tree.show(ast)
-
 resolverComandos(s, m, c, ast)
 printSMC(s,m,c)
 
