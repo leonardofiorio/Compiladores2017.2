@@ -193,9 +193,9 @@ function getString(ast)
   local s = ""
   if ast ~=nil then
     if (ast.data == "add") or (ast.data == "sub") or (ast.data == "mul") or 
-      (ast.data == "eq") or (ast.data == "att") or (ast.data == "or") then
+      (ast.data == "eq") or (ast.data == "att") or (ast.data == "or") or (ast.data == "and")then
       if ast.children ~= nil then
-        s = s .. "(" .. ast.data .. " " .. getString(ast.children[1]).. " " .. getString(ast.children[2]) .. ")"
+        s = s .. "(" .. getString(ast.children[1]).. " " ..ast.data .. " " .. getString(ast.children[2]) .. ")"
       else
         s = ast.data
       end

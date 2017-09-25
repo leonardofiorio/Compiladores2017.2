@@ -7,8 +7,10 @@ function resolverComandos(s,m,c, ast)
 	if ast ~= nil then
 		data = getData(ast, m)
 	else
-		data = c:pop(1).data
+		data = c:pop(1)
 	end
+
+	print("Data: ",data)
 
 	if data == "add" or data == "sub" or data == "mul" or data == "eq" or data == "not" 
 		or data == "att" or data == "or" or data=="and" then
@@ -16,8 +18,13 @@ function resolverComandos(s,m,c, ast)
 		return resolverExpressoes(s,m,c, ast)
 
 	elseif data == "while" then
-		conditional = resolverComandos(s,m,c,ast.children[1])
-		commands = resolverComandos(s,m,c,ast.children[2])
+		if ast ~= nil then
+			conditional = getString(ast.children[1])
+			commands = getString(ast.children[2])
+		else
+
+		end
+
 
 		print("Resolvendo while")
 		-- Empilhando while em C
@@ -30,10 +37,7 @@ function resolverComandos(s,m,c, ast)
 
 		-- Desempilhando de C e empilhando em S
 		print("Desempilhando de C e empilhando em S")
-		c:pop(1)
-		c:pop(1)
-		c:pop(1)
-		c:pop(1)
+		c:pop(4)
 		s:push(commands)
 		s:push(conditional)
 		c:push(data)
@@ -52,15 +56,16 @@ function resolverComandos(s,m,c, ast)
 			c:push(commands)
 			c:push("do")
 			c:push(conditional)
-			c:push(data)
 			c:push("while")
 			c:push(commands)
-			resolverComandos(s,m,c, nil)
+			print("Executando comandos")
+			resolverComandos(s,m,c, ast)
+			printSMC(s,m,c,nil)
+			return
 		else 
 			c:pop(1)
 			return 
 		end 
-
 		return
 	elseif data == "if" then
 		commands_else = getString(ast.children[3])
@@ -103,11 +108,12 @@ end
 
 
 -- while
--- local ast = node("while", {node("eq", {node("1", nil), node("1", nil)}), 
--- 		node("and", {node("tt", nil), node("tt", nil)})})
+ local ast = node("while", {node("eq", {node("1", nil), node("2", nil)}), 
+ 		node("and", {node("tt", nil), node("tt", nil)})})
 
-local ast = node("if", {node("eq", {node("1",nil), node("5",nil)}), 
-	node("eq", {node("2",nil), node("2", nil)}), node("not", {node("ff", nil)})})
+--local ast = node("if", {node("eq", {node("1",nil), node("5",nil)}), 
+--	node("eq", {node("2",nil), node("2", nil)}), node("not", {node("ff", nil)})})
+
 tree.show(ast)
 
 resolverComandos(s, m, c, ast)
