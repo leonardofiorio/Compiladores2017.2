@@ -5,13 +5,17 @@ local lpeg = require"lpeg"
 local boolVal = lpeg.S"tt" + lpeg.S"ff"
 
 s = Stack:Create() -- Criando pilha para S
-m = {} -- Criando vetor para M
+-- Criando vetor para M
+m = {} 
+loc = {}
+
+loc = {1 , 5}
 
 -- Inicializando memória com valores 
 -- m['a'] = 7
 -- m['b'] = 21
-m['result'] = 1
-m['fat'] = 5
+m['result'] = loc[1]
+m['fat'] = loc[2]
 
 c = Stack:Create() -- Criando pilha para C
 
@@ -30,6 +34,43 @@ function resolverExpressoes(s,m,c,ast)
       c:push(data)
       printSMC(s,m,c)
       return data
+
+    elseif data == "if" then
+      commands_else = getString(ast.children[3])
+      commands = getString(ast.children[2])
+
+      c:push(commands_else)
+      c:push("else")
+      c:push(commands)
+      c:push("then")
+
+      conditional = getString(ast.children[1])
+
+      c:push(conditional)
+      c:push("if")
+      printSMC(s,m,c)
+      
+      s:push(commands_else)
+      s:push(commands)
+      c:pop(6)
+      c:push("if")
+      c:push(conditional)
+      c:pop(1)
+      printSMC(s,m,c)
+
+      resolverExpressoes(s,m,c, ast.children[1])
+      
+      t = s:pop(1)
+      s:pop(1)
+      s:pop(1)
+      c:pop(1)
+      if t == "tt" then 
+        commands = resolverExpressoes(s,m,c, ast.children[2])
+        return commands
+      elseif t == "ff" then
+        commands_else = resolverExpressoes(s,m,c, ast.children[3])
+        return commands_else
+      end
 
     elseif data == "add" then
       print("ADD")
@@ -256,10 +297,27 @@ end
 -- 			})
 -- 	})
 
+local ast = node("att", {
+  node("z", nil),   
+  node("if", {
+      node("eq", {
+        node("1", nil),
+        node("2", nil)
+      }),
+      node("add",{
+        node("1", nil),
+        node("2", nil)
+      }),
+      node("add",{
+        node("2", nil),
+        node("3", nil)
+      }),
+  })
+})
 
 tree.show(ast)
 
---resolverExpressoes(s,m,c,ast)
+resolverExpressoes(s,m,c,ast)
 
 -- print()
 -- print("Resultado final: ")
