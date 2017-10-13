@@ -14,12 +14,14 @@ loc = {1 , 5}
 -- Inicializando memória com valores 
 -- m['a'] = 7
 -- m['b'] = 21
-m['result'] = loc[1]
-m['fat'] = loc[2]
+m['result'] = 1
+m['fat'] = 2
 
 c = Stack:Create() -- Criando pilha para C
 
-function resolverExpressoes(s,m,c,ast)
+e = 0
+
+function resolverExpressoes(e,s,m,c,ast)
   
   if ast ~= nil then
     local data = getData(ast, m)
@@ -27,12 +29,12 @@ function resolverExpressoes(s,m,c,ast)
     if (tonumber(data) ~= nil) then
       num = tonumber(data)
       c:push(num)
-      printSMC(s,m,c)
+      printSMC(e,s,m,c)
       return num
 
   	elseif lpeg.match(boolVal, data) then
       c:push(data)
-      printSMC(s,m,c)
+      printSMC(e,s,m,c)
       return data
 
     elseif data == "if" then
@@ -48,7 +50,7 @@ function resolverExpressoes(s,m,c,ast)
 
       c:push(conditional)
       c:push("if")
-      printSMC(s,m,c)
+      printSMC(e,s,m,c)
       
       s:push(commands_else)
       s:push(commands)
@@ -56,102 +58,103 @@ function resolverExpressoes(s,m,c,ast)
       c:push("if")
       c:push(conditional)
       c:pop(1)
-      printSMC(s,m,c)
+      printSMC(e,s,m,c)
 
-      resolverExpressoes(s,m,c, ast.children[1])
+      resolverExpressoes(e,s,m,c, ast.children[1])
       
       t = s:pop(1)
       s:pop(1)
       s:pop(1)
       c:pop(1)
       if t == "tt" then 
-        commands = resolverExpressoes(s,m,c, ast.children[2])
+        commands = resolverExpressoes(e,s,m,c, ast.children[2])
         return commands
       elseif t == "ff" then
-        commands_else = resolverExpressoes(s,m,c, ast.children[3])
+        commands_else = resolverExpressoes(e,s,m,c, ast.children[3])
         return commands_else
       end
-
     elseif data == "add" then
       print("ADD")
       print("Expressão pósfixada em C")
       c:push("add")
-      printSMC(s,m,c)
-      resultado = resolverExpressoes(s,m,c, ast.children[1]) + resolverExpressoes(s,m,c, ast.children[2])
+      printSMC(e,s,m,c)
+      resultado = resolverExpressoes(e,s,m,c, ast.children[1]) + resolverExpressoes(e,s,m,c, ast.children[2])
       s:pop(1)
       s:push(resultado)
       c:pop(3)
-      printSMC(s,m,c)
+      printSMC(e,s,m,c)
       return resultado
 
     elseif data == "sub" then
       print("SUB")
       print("Expressão pósfixada em C")
       c:push("sub")
-      printSMC(s,m,c)
-      resultado = resolverExpressoes(s,m,c, ast.children[1]) - resolverExpressoes(s,m,c, ast.children[2])
+      printSMC(e,s,m,c)
+      resultado = resolverExpressoes(e,s,m,c, ast.children[1]) - resolverExpressoes(e,s,m,c, ast.children[2])
       s:pop(1)
       s:push(resultado)
       c:pop(3)
-      printSMC(s,m,c)
+      printSMC(e,s,m,c)
       return resultado
       
     elseif data == "mul" then
       print("MUL")
       print("Expressão pósfixada em C")
       c:push("mul")
-      printSMC(s,m,c)
-      resultado = resolverExpressoes(s,m,c, ast.children[1]) * resolverExpressoes(s,m,c, ast.children[2])
+      printSMC(e,s,m,c)
+      resultado = resolverExpressoes(e,s,m,c, ast.children[1]) * resolverExpressoes(e,s,m,c, ast.children[2])
       s:pop(1)
       s:push(resultado)
       c:pop(3)
-      printSMC(s,m,c)
+      printSMC(e,s,m,c)
       return resultado
 
   	elseif data == "eq" then
       print("EQ")
       print("Expressão pósfixada em C")
       c:push("eq")
-      printSMC(s,m,c)
-      resultado = getBoolean(resolverExpressoes(s,m,c, ast.children[1]) == resolverExpressoes(s,m,c, ast.children[2]))
+      printSMC(e,s,m,c)
+      resultado = getBoolean(resolverExpressoes(e,s,m,c, ast.children[1]) == resolverExpressoes(e,s,m,c, ast.children[2]))
       --s:pop(1)
       s:push(resultado)
       c:pop(3)
-      printSMC(s,m,c)
+      printSMC(e,s,m,c)
       return resultado
 
   	elseif data == "not" then
       print("NOT")
       print("Expressão pósfixada em C")
       c:push("not")
-      printSMC(s,m,c)
-      resultado = getNot(resolverExpressoes(s,m,c, ast.children[1], true))
+      printSMC(e,s,m,c)
+      resultado = getNot(resolverExpressoes(e,s,m,c, ast.children[1], true))
       s:pop(1)
       s:push(resultado)
       c:pop(2)--dois pops?
-      printSMC(s,m,c)
+      printSMC(e,s,m,c)
       return resultado
 
   	elseif data == "att" then --attribution
       print("ATT")
       print("Expressão pósfixada em C")
       c:push("att")
-      printSMC(s,m,c)
+      printSMC(e,s,m,c)
       local var = ast.children[1].data
       c:push(var)
-      m[var] = resolverExpressoes(s,m,c, ast.children[2])
+      size = table.maxn(loc)
+      m[var] = size + 1
+      loc[size+1] = resolverExpressoes(e,s,m,c, ast.children[2])
       s:pop(1)
       c:pop(3)
-      printSMC(s,m,c)
+      printSMC(e,s,m,c)
       return
 
   	elseif data == "or" then
       print("OR")
       print("Expressão pósfixada em C")
       c:push("or")
-      printSMC(s,m,c)
-      local val1 = resolverExpressoes(s,m,c, ast.children[1])
-      local val2 = resolverExpressoes(s,m,c, ast.children[2])
+      printSMC(e,s,m,c)
+      local val1 = resolverExpressoes(e,s,m,c, ast.children[1])
+      local val2 = resolverExpressoes(e,s,m,c, ast.children[2])
       resultado = getBoolean(toBool(val1) or toBool(val2))
       s:pop(1)
       s:push(resultado)
@@ -160,14 +163,13 @@ function resolverExpressoes(s,m,c,ast)
       else
       	c:pop(3)
       end
-      printSMC(s,m,c)
+      printSMC(e,s,m,c)
       return resultado
 
     elseif data == ";" then
       for _,child in ipairs(ast.children) do
-        resolverExpressoes(s,m,c, child)
+        resolverExpressoes(e,s,m,c, child)
       end
-
     end
   end
 end
@@ -177,7 +179,7 @@ function getData(node, m)
 	local e = data
     e = m[e]
     if e ~= nil then
-      data = e
+      data = loc[e]
     end
     return data
 end
@@ -209,8 +211,9 @@ function getNot(b)
 end
 
 -- Função para impressão das pilhas SMC no formato de leitura
-function printSMC(s, m, c)
+function printSMC(e, s, m, c)
 	local smc = "< "
+  smc = smc .. e .. " E, "
 	stack = Stack:Create()
   for i,v in pairs(s._et) do
     stack:push(v)
@@ -222,7 +225,9 @@ function printSMC(s, m, c)
 	end
 	smc = smc.."S, "
 	for i, v in pairs(m) do
-		smc = smc.."["..i.."]".."="..v.." "
+    if loc[v] ~= nil then
+		  smc = smc.."["..i.."]".."="..loc[v].." "
+    end
 	end
 	smc = smc.."M, "
 	for i,v in pairs(c._et) do
@@ -297,30 +302,30 @@ end
 -- 			})
 -- 	})
 
-local ast = node("att", {
-  node("z", nil),   
-  node("if", {
-      node("eq", {
-        node("1", nil),
-        node("2", nil)
-      }),
-      node("add",{
-        node("1", nil),
-        node("2", nil)
-      }),
-      node("add",{
-        node("2", nil),
-        node("3", nil)
-      }),
-  })
-})
+-- local ast = node("att", {
+--   node("z", nil),   
+--   node("if", {
+--       node("eq", {
+--         node("1", nil),
+--         node("2", nil)
+--       }),
+--       node("add",{
+--         node("1", nil),
+--         node("2", nil)
+--       }),
+--       node("add",{
+--         node("2", nil),
+--         node("3", nil)
+--       }),
+--   })
+-- })
 
-tree.show(ast)
+-- tree.show(ast)
 
-resolverExpressoes(s,m,c,ast)
+-- resolverExpressoes(0,s,m,c,ast)
 
 -- print()
 -- print("Resultado final: ")
--- printSMC(s,m,c)
+-- printSMC(e,s,m,c)
 
 

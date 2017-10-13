@@ -2,9 +2,9 @@ expressoes = require "expressoes"
 local tree = require "tree"
 local lpeg = require"lpeg"
 
-local exp = lpeg.S"add" + lpeg.S"sub" + lpeg.S"mul" + lpeg.S"eq" + lpeg.S"not" + lpeg.S"att" + lpeg.S"or" + lpeg.S";"
+local exp = lpeg.S"add" + lpeg.S"sub" + lpeg.S"mul" + lpeg.S"eq" + lpeg.S"not" + lpeg.S"att" + lpeg.S"or"
 
-function resolverComandos(s,m,c, ast)
+function resolverComandos(e,s,m,c, ast)
 	local data
 	if ast ~= nil then
 		data = getData(ast, m)
@@ -12,10 +12,19 @@ function resolverComandos(s,m,c, ast)
 		data = c:pop(1)
 	end
 
+	print("DATA: ", data)
+
 	if lpeg.match(exp, data) then
 		s:pop(1)
-		return resolverExpressoes(s,m,c, ast)
+		return resolverExpressoes(e,s,m,c, ast)
 
+	elseif data == "var" then
+		size = table.maxn(loc)
+		loc[size+1] = resolverExpressoes(e,s,m,c, ast.children[2])
+		m[ast.children[1].data] = size+1
+		c:pop(1)
+
+		return
 	elseif data == "while" then
 		conditional = getString(ast.children[1])
 		commands = getString(ast.children[2])
@@ -87,7 +96,7 @@ function resolverComandos(s,m,c, ast)
 		c:pop(1)
 		printSMC(s,m,c)
 
-		resolverExpressoes(s,m,c, ast.children[1])
+		resolverExpressoes(e,s,m,c, ast.children[1])
 		
 
 		t = s:pop(1)
@@ -99,6 +108,11 @@ function resolverComandos(s,m,c, ast)
 		elseif t == "ff" then
 			commands_else = resolverComandos(s,m,c, ast.children[3])
 		end
+	elseif data == ";" then
+	  print(";")
+      for _,child in ipairs(ast.children) do
+        resolverComandos(e,s,m,c, child)
+      end
 	end
 end
 
@@ -119,16 +133,16 @@ end
  -- 			})
  -- 		})
 
-local ast = node(";", {
-		node("att", {
-			node("a",nil),
-			node("13",nil)
-			}),
-		node("att", {
-			node("b",nil),
-			node("14",nil)
-			})
-	})
+-- local ast = node(";", {
+-- 		node("att", {
+-- 			node("a",nil),
+-- 			node("13",nil)
+-- 			}),
+-- 		node("att", {
+-- 			node("b",nil),
+-- 			node("14",nil)
+-- 			})
+-- 	})
 
  -- local ast = node("while", {
  -- 	node("not", {
@@ -146,30 +160,30 @@ local ast = node(";", {
  -- 		})
  -- 	})
 
- local ast = node("while", { --fatorial
- 	node("not", {
- 		node("eq", {
- 			node("fat",nil),
- 			node("0",nil),
- 			})
- 		}),
- 	node(";", {
- 			node("att", {
-	 		node("result",nil),
-	 		node("mul", {
-	 			node("result",nil),
-	 			node("fat",nil)
-	 			})
-	 		}),
-	 	node("att", {
-	 		node("fat",nil),
-	 		node("sub", {
-	 			node("fat",nil),
-	 			node("1",nil)
-	 			})
-	 		})
- 		})
- 	})
+ -- local ast = node("while", { --fatorial
+ -- 	node("not", {
+ -- 		node("eq", {
+ -- 			node("fat",nil),
+ -- 			node("0",nil),
+ -- 			})
+ -- 		}),
+ -- 	node(";", {
+ -- 			node("att", {
+	--  		node("result",nil),
+	--  		node("mul", {
+	--  			node("result",nil),
+	--  			node("fat",nil)
+	--  			})
+	--  		}),
+	--  	node("att", {
+	--  		node("fat",nil),
+	--  		node("sub", {
+	--  			node("fat",nil),
+	--  			node("1",nil)
+	--  			})
+	--  		})
+ -- 		})
+ -- 	})
 
 -- local ast = node("if", {
 -- 	node("eq", {
@@ -186,21 +200,44 @@ local ast = node(";", {
 -- 		})
 -- 	})
 
--- local ast = node("while", {
--- 	node("eq", {
--- 		node("a", nil), 
--- 		node("1", nil)
--- 		}), 
--- 	node("att", {
--- 		node("1", nil), 
--- 		node("2", nil)
--- 		})
--- 	})
+--[[local ast = node("while", {
+	node("eq", {
+		node("a", nil), 
+		node("1", nil)
+		}), 
+	node("att", {
+		node("1", nil), 
+		node("2", nil)
+		})
+	})--]]
+
+local ast = node(";", {
+	node("var", {
+		node("y", nil),
+		node("7",nil)
+	}),
+	node("var", {
+		node("x", nil),
+		node("3",nil)
+		}),
+	node("var", {
+		node("z", nil),
+		node("9",nil)
+		}),
+	node("att", {
+		node("y", nil),
+		node("add",{
+			node("z",nil),
+			node("x",nil)
+			})
+		})
+	})
 
 print("\n\n\n\n\n\nÁrvore:\n")
 tree.show(ast)
-resolverComandos(s, m, c, ast)
-printSMC(s,m,c)
+resolverComandos(e,s, m, c, ast)
+print("Final")
+printSMC(e,s,m,c)
 
 -- if
 --local ast = node(";", {node("<", {node("1", nil), node("2", nil)}), node("", ) , node("", )})
