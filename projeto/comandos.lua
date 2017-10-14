@@ -19,10 +19,13 @@ function resolverComandos(e,s,m,c, ast)
 		return resolverExpressoes(e,s,m,c, ast)
 
 	elseif data == "var" then
+		c:push("var")
 		size = table.maxn(loc)
-		loc[size+1] = resolverExpressoes(e,s,m,c, ast.children[2])
+		val = resolverExpressoes(e,s,m,c, ast.children[2])
+		c:push(val)
+		loc[size+1] = val
 		m[ast.children[1].data] = size+1
-		c:pop(1)
+		c:pop(3)
 
 		return
 	elseif data == "while" then
