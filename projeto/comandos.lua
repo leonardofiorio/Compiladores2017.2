@@ -39,7 +39,7 @@ function resolverComandos(e,s,m,c, ast)
 		c:push("do")
 		c:push(conditional)
 		c:push("while")
-		printSMC(s,m,c)
+		printSMC(e,s,m,c)
 
 		-- Desempilhando de C e empilhando em S
 		print("Desempilhando de C e empilhando em S")
@@ -48,7 +48,7 @@ function resolverComandos(e,s,m,c, ast)
 		s:push(conditional)
 		c:push(data)
 		c:push(conditional)
-		printSMC(s,m,c)
+		printSMC(e,s,m,c)
 
 		-- Condicional do while
 		c:pop(1)
@@ -57,7 +57,7 @@ function resolverComandos(e,s,m,c, ast)
 		if s:pop(1) == "tt" then
 			-- Bloco de comandos
 			resolverComandos(s,m,c, ast.children[2])
-			printSMC(s,m,c)
+			printSMC(e,s,m,c)
 
 			c:pop(1)
 			c:push(commands)
@@ -69,7 +69,7 @@ function resolverComandos(e,s,m,c, ast)
 			s:pop(1)
 			print("Reexecutando")
 			resolverComandos(s,m,c, ast)
-			printSMC(s,m,c,nil)
+			printSMC(e,s,m,c,nil)
 			return
 		else 
 			c:pop(1)
@@ -89,7 +89,7 @@ function resolverComandos(e,s,m,c, ast)
 
 		c:push(conditional)
 		c:push("if")
-		printSMC(s,m,c)
+		printSMC(e,s,m,c)
 		
 		s:push(commands_else)
 		s:push(commands)
@@ -97,7 +97,7 @@ function resolverComandos(e,s,m,c, ast)
 		c:push("if")
 		c:push(conditional)
 		c:pop(1)
-		printSMC(s,m,c)
+		printSMC(e,s,m,c)
 
 		resolverExpressoes(e,s,m,c, ast.children[1])
 		
@@ -107,9 +107,9 @@ function resolverComandos(e,s,m,c, ast)
 		s:pop(1)
 		c:pop(1)
 		if t == "tt" then 
-			commands = resolverComandos(s,m,c, ast.children[2])
+			commands = resolverComandos(e,s,m,c, ast.children[2])
 		elseif t == "ff" then
-			commands_else = resolverComandos(s,m,c, ast.children[3])
+			commands_else = resolverComandos(e,s,m,c, ast.children[3])
 		end
 	elseif data == ";" then
 	  print(";")
@@ -214,31 +214,52 @@ end
 		})
 	})--]]
 
-local ast = node(";", {
-	node("var", {
-		node("y", nil),
-		node("7",nil)
-	}),
-	node("var", {
-		node("x", nil),
-		node("3",nil)
+-- local ast = node(";", {
+-- 	node("var", {
+-- 		node("y", nil),
+-- 		node("7",nil)
+-- 	}),
+-- 	node("var", {
+-- 		node("x", nil),
+-- 		node("3",nil)
+-- 		}),
+-- 	node("var", {
+-- 		node("z", nil),
+-- 		node("9",nil)
+-- 		}),
+-- 	node("att", {
+-- 		node("y", nil),
+-- 		node("add",{
+-- 			node("z",nil),
+-- 			node("x",nil)
+-- 			})
+-- 		})
+-- 	})
+
+local ast=node(";",{
+	node("if",{
+		node("eq",{
+			node("1",nil),
+			node("1",nil)
+			}),
+		node("var",{
+			node("x", nil),
+			node("3", nil)
 		}),
-	node("var", {
-		node("z", nil),
-		node("9",nil)
-		}),
-	node("att", {
-		node("y", nil),
-		node("add",{
-			node("z",nil),
-			node("x",nil)
-			})
+		node("var",{
+			node("y",nil),
+			node("0",nil)
 		})
+	}),
+	node("att",{
+		node("x",nil),
+		node("9",nil)
 	})
+})
 
 print("\n\n\n\n\n\nÁrvore:\n")
 tree.show(ast)
-resolverComandos(e,s, m, c, ast)
+resolverComandos(e, s, m, c, ast)
 print("Final")
 printSMC(e,s,m,c)
 
