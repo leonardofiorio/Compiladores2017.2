@@ -147,6 +147,37 @@ end
 -- 			})
 -- 	})
 
+local ast = node(";", {
+		node("if", {
+		node("eq", {
+			node("5",nil), 
+			node("5",nil)
+			}), 
+		node("att", { --then
+			node("b",nil), 
+			node("102", nil)
+			}), 
+		node("att", { --else
+			node("b", nil),
+			node("103", nil)
+			})
+		}),
+			node("if", {
+		node("eq", {
+			node("4",nil), 
+			node("4",nil)
+			}), 
+		node("att", { --then
+			node("a",nil), 
+			node("22", nil)
+			}), 
+		node("att", { --else
+			node("a", nil),
+			node("33", nil)
+			})
+		})
+	})
+
  -- local ast = node("while", {
  -- 	node("not", {
  -- 		node("eq", {

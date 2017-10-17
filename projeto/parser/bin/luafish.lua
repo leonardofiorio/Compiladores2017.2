@@ -4,8 +4,14 @@
 -- Example usage:
 --    export LUA_PATH='lib/?.lua;examples/?.lua;?.lua'
 --    lua bin/luafish.lua examples/type_usage2.lua
+-- or
+--    lua bin/luafish.lua "code"
 
 function printAST(ast)
+  print("\n\n")
+  -- ast = string.gsub(tostring(ast), "{", "{\n")
+  -- ast = string.gsub(tostring(ast), "}", "}\n")
+  -- print(ast)
   print("\n\n")
   for key,value in ipairs(ast) do --each ';' determines 1 key
     print(key)

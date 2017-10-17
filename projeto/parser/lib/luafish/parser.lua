@@ -121,6 +121,8 @@ local anykeyword =
     P'if' +
     P'in' +
     P'local' +
+    P'var' +
+    P'const' +
     P'nil' +
     P'not' +
     P'or' + 
@@ -247,14 +249,14 @@ local function build_grammar(self)
     (C2'Set' * V'varlist' * op'=' * V'explist')
         / self.handle_set +
     V'functioncall' +
-    (C2'Do' * keyword'do' * V'block' * keyword'end')
+    (C2'do' * keyword'do' * V'block' * keyword'end')
         / self.handle_do +
-    (C2'While' * keyword'while' * V'exp' * keyword'do' *
+    (C2'while' * keyword'while' * V'exp' * keyword'do' *
         V'block' * keyword'end')
         / self.handle_while +
     (C2'Repeat' * keyword'repeat' * V'block' * keyword'until' * V'exp')
         / self.handle_repeat +
-    (C2'If' * keyword'if' * V'exp' * keyword'then' * V'block' *
+    (C2'if' * keyword'if' * V'exp' * keyword'then' * V'block' *
         (keyword'elseif' * V'exp' * keyword'then' * V'block')^0 *
         (keyword'else' * V'block')^-1 *
         keyword'end')
@@ -271,6 +273,10 @@ local function build_grammar(self)
          V'funcbody')
          / self.handle_localfunctiondef +
     (C2'Local' * keyword'local' * V'namelist' * (op'=' * V'explist')^-1)
+        / self.handle_localfunctiondef +
+    (C2'Var' * keyword'var' * V'namelist' * (op'=' * V'explist')^-1)
+        / self.handle_localfunctiondef +
+    (C2'Const' * keyword'const' * V'namelist' * (op'=' * V'explist')^-1)
          / self.handle_local
   ) / self.handle_stat
 
@@ -511,7 +517,7 @@ setmetatable(M, {__call = function()
   build_grammar(self)
 
   return self
-end})
+end}) 
 
 -- convert "pos" attribute (character position) to
 -- "nline"/"ncols" attributes (line and column numbers)
@@ -552,7 +558,7 @@ function M:parse(o)
   end
 
                                          --FIX: and increase line number
-  text = "local b = 12;local a = 12;while true do local a = 2 end" --checkHere
+  -- text = "local b = 12;local a = 12;while true do local a = 2 end" --checkHere
   -- text = "local a = 10;if true then a = 11 else a = 12 end"
   self.s = text
   local ok, result = pcall(lpeg.match, self.grammar, text)
