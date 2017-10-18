@@ -6,25 +6,17 @@ local boolVal = lpeg.S"tt" + lpeg.S"ff"
 
 s = Stack:Create() -- Criando pilha para S
 -- Criando vetor para M
-m = {} 
-loc = {}
+e = {} 
 
-loc = {1 , 5}
-
--- Inicializando memória com valores 
--- m['a'] = 7
--- m['b'] = 21
-m['result'] = 1
-m['fat'] = 2
+m = {}
 
 c = Stack:Create() -- Criando pilha para C
 
-e = 0
 
 function resolverExpressoes(e,s,m,c,ast)
   
   if ast ~= nil then
-    local data = getData(ast, m)
+    local data = getData(ast, e)
 
     if (tonumber(data) ~= nil) then
       num = tonumber(data)
@@ -140,9 +132,9 @@ function resolverExpressoes(e,s,m,c,ast)
       printSMC(e,s,m,c)
       local var = ast.children[1].data
       c:push(var)
-      size = table.maxn(loc)
-      m[var] = size + 1
-      loc[size+1] = resolverExpressoes(e,s,m,c, ast.children[2])
+      size = table.maxn(m)
+      e[var] = size + 1
+      m[size+1] = resolverExpressoes(e,s,m,c, ast.children[2])
       s:pop(1)
       c:pop(3)
       printSMC(e,s,m,c)
@@ -174,12 +166,12 @@ function resolverExpressoes(e,s,m,c,ast)
   end
 end
 
-function getData(node, m)
+function getData(node, e)
 	local data = node.data
-	local e = data
-    e = m[e]
-    if e ~= nil then
-      data = loc[e]
+	local exp = data
+    exp = e[exp]
+    if exp ~= nil then
+      data = m[exp]
     end
     return data
 end
@@ -213,8 +205,15 @@ end
 -- Função para impressão das pilhas SMC no formato de leitura
 function printSMC(e, s, m, c)
 	local smc = "< "
-  smc = smc .. e .. " E, "
-	stack = Stack:Create()
+  stack = Stack:Create()
+  -- E
+	for i, v in pairs(e) do
+    if e[i] ~= nil then
+      smc = smc.."["..i.."]".."="..e[i].." "
+    end
+  end
+  smc = smc.."E, "
+  -- S
   for i,v in pairs(s._et) do
     stack:push(v)
   end
@@ -224,15 +223,17 @@ function printSMC(e, s, m, c)
 		element = stack:pop(1)
 	end
 	smc = smc.."S, "
+  -- M
 	for i, v in pairs(m) do
-    if loc[v] ~= nil then
-		  smc = smc.."["..i.."]".."="..loc[v].." "
+    if m[i] ~= nil then
+		  smc = smc.."["..i.."]".."="..m[i].." "
     end
 	end
 	smc = smc.."M, "
 	for i,v in pairs(c._et) do
     stack:push(v)
   end
+  -- C
   element = stack:pop(1)
   while element ~= nil do
     smc = smc..element.." "
