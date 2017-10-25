@@ -2,8 +2,6 @@ require "pilha" -- Incluindo implementação da pilha
 local tree = require "tree" -- Importando implementação de árvore 
 local lpeg = require"lpeg"
 
-local boolVal = lpeg.S"tt" + lpeg.S"ff"
-
 s = Stack:Create() -- Criando pilha para S
 -- Criando vetor para M
 e = {} 
@@ -12,19 +10,24 @@ m = {}
 
 c = Stack:Create() -- Criando pilha para C
 
+require "loc"
+
 
 function resolverExpressoes(e,s,m,c,ast)
   
   if ast ~= nil then
     local data = getData(ast, e)
 
+
     if (tonumber(data) ~= nil) then
       num = tonumber(data)
       c:push(num)
       printSMC(e,s,m,c)
       return num
+    -- elseif Loc:isLoc(data) then
+    --   return data.value
 
-  	elseif lpeg.match(boolVal, data) then
+  	elseif data == "tt" or data == "ff" then
       c:push(data)
       printSMC(e,s,m,c)
       return data
@@ -70,11 +73,17 @@ function resolverExpressoes(e,s,m,c,ast)
       print("Expressão pósfixada em C")
       c:push("add")
       printSMC(e,s,m,c)
-      resultado = resolverExpressoes(e,s,m,c, ast.children[1]) + resolverExpressoes(e,s,m,c, ast.children[2])
+
+      val1 = resolverExpressoes(e,s,m,c,ast.children[1])
+      val2 = resolverExpressoes(e,s,m,c, ast.children[2])
+
+
+      resultado = val1+val2
       s:pop(1)
       s:push(resultado)
       c:pop(3)
       printSMC(e,s,m,c)
+      s:pop(1)
       return resultado
 
     elseif data == "sub" then
@@ -130,16 +139,36 @@ function resolverExpressoes(e,s,m,c,ast)
       print("Expressão pósfixada em C")
       c:push("att")
       printSMC(e,s,m,c)
-      local var = ast.children[1].data
-      c:push(var)
-      size = table.maxn(m)
-      e[var] = size + 1
-      m[size+1] = resolverExpressoes(e,s,m,c, ast.children[2])
-      s:pop(1)
-      c:pop(3)
-      printSMC(e,s,m,c)
-      return
 
+      aux = e[ast.children[1].data]
+      if Loc:isLoc(aux) == false then
+        print("Error!!!")
+        return
+      end
+
+      flag = false
+      for i,v in pairs(e) do
+        if i == ast.children[1].data then
+          flag = true
+        end
+      end
+
+      if flag then
+        local var = ast.children[1].data
+        c:push(var)
+        size = table.maxn(m)
+        resultado = resolverExpressoes(e,s,m,c, ast.children[2])
+        obj = Loc:new(size+1, resultado)
+        e[var] = obj
+        m[size+1] = obj
+        s:pop(1)
+        c:pop(3)
+
+        printSMC(e,s,m,c)
+      else
+        print("---- Error!!! ----")
+      end
+      return
   	elseif data == "or" then
       print("OR")
       print("Expressão pósfixada em C")
@@ -171,7 +200,7 @@ function getData(node, e)
 	local exp = data
     exp = e[exp]
     if exp ~= nil then
-      data = m[exp]
+      data = exp:getValue()
     end
     return data
 end
@@ -208,8 +237,12 @@ function printSMC(e, s, m, c)
   stack = Stack:Create()
   -- E
 	for i, v in pairs(e) do
-    if e[i] ~= nil then
-      smc = smc.."["..i.."]".."="..e[i].." "
+    if v ~= nil then
+      if Loc:isLoc(v) then
+        smc = smc.."["..i.."]".."=".. e[i]:getId() .." "
+      else
+        smc = smc.."["..i.."]".."=".. e[i] .." "
+      end
     end
   end
   smc = smc.."E, "
@@ -224,11 +257,12 @@ function printSMC(e, s, m, c)
 	end
 	smc = smc.."S, "
   -- M
-	for i, v in pairs(m) do
+  for i=1, table.maxn(m) do
     if m[i] ~= nil then
-		  smc = smc.."["..i.."]".."="..m[i].." "
+      smc = smc.."loc("..m[i]:getId()..")".."=>".. m[i]:getValue() .." "
     end
-	end
+  end
+
 	smc = smc.."M, "
 	for i,v in pairs(c._et) do
     stack:push(v)

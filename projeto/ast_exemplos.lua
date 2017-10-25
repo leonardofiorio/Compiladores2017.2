@@ -224,26 +224,46 @@ require "comandos"
 -- 		})
 -- 	})
 
-local ast=node(";",{
-	node("if",{
-		node("eq",{
-			node("1",nil),
-			node("1",nil)
-			}),
-		node("var",{
-			node("x", nil),
-			node("3", nil)
-		}),
-		node("var",{
-			node("y",nil),
-			node("0",nil)
-		})
-	}),
-	node("att",{
-		node("x",nil),
-		node("9",nil)
-	})
-})
+-- local ast=node(";",{
+-- 	node("if",{
+-- 		node("eq",{
+-- 			node("1",nil),
+-- 			node("1",nil)
+-- 			}),
+-- 		node("var",{
+-- 			node("x", nil),
+-- 			node("3", nil)
+-- 		}),
+-- 		node("var",{
+-- 			node("y",nil),
+-- 			node("0",nil)
+-- 		})
+-- 	}),
+-- 	node("att",{
+-- 		node("x",nil),
+-- 		node("9",nil)
+-- 	})
+-- })
+
+-- local ast = node(";",{
+-- 		node("var",{
+-- 			node("x", nil),
+-- 			node("2",nil)
+-- 		})
+-- 	})
+
+-- local ast = node(";",{
+-- 		node("const",{
+-- 			node("a",nil),
+-- 			node("2",nil)
+-- 		}),
+-- 		node("att",{
+-- 			node("a", nil),
+-- 			node("9", nil)
+-- 		})
+-- 	})
+
+
 
 print("\n\n\n\n\n\nÁrvore:\n")
 tree.show(ast)

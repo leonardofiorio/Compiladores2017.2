@@ -1,6 +1,7 @@
 expressoes = require "expressoes"
 tree = require "tree"
 lpeg = require"lpeg"
+loc = require "loc"
 
 local exp = lpeg.S"add" + lpeg.S"sub" + lpeg.S"mul" + lpeg.S"eq" + lpeg.S"not" + lpeg.S"att" + lpeg.S"or"
 
@@ -11,9 +12,7 @@ function resolverComandos(e,s,m,c, ast)
 	else
 		data = c:pop(1)
 	end
-
-	print("DATA: ", data)
-
+	
 	if lpeg.match(exp, data) then
 		s:pop(1)
 		return resolverExpressoes(e,s,m,c, ast)
@@ -23,8 +22,16 @@ function resolverComandos(e,s,m,c, ast)
 		size = table.maxn(m)
 		val = resolverExpressoes(e,s,m,c, ast.children[2])
 		c:push(val)
-		m[size+1] = val
-		e[ast.children[1].data] = size+1
+		obj = Loc:new(size+1,val)
+		m[size+1] = obj
+		e[ast.children[1].data] = obj
+		c:pop(3)
+		return
+	elseif data == "const" then
+		c:push("const") 
+		val = resolverExpressoes(e,s,m,c, ast.children[2])
+		c:push(val)
+		e[ast.children[1].data] = val
 		c:pop(3)
 		return
 	elseif data == "while" then
@@ -105,14 +112,32 @@ function resolverComandos(e,s,m,c, ast)
 		s:pop(1)
 		s:pop(1)
 		c:pop(1)
-		if t == "tt" then 
-			commands = resolverComandos(e,s,m,c, ast.children[2])
-		elseif t == "ff" then
-			commands_else = resolverComandos(e,s,m,c, ast.children[3])
+
+		copy_e = {}
+		for i,v in pairs(e) do
+			copy_e[i] = e[i]
+		end 
+
+		copy_m = {}
+		for i, v in pairs(m) do 
+			copy_m[i] = m[i]
 		end
+
+
+		if t == "tt" then 
+			commands = resolverComandos(copy_e,s,copy_m,c, ast.children[2])
+		elseif t == "ff" then
+			commands_else = resolverComandos(copy_e,s,copy_m,c, ast.children[3])
+		end
+
+		tam = table.maxn(m)
+		for i,v in pairs(copy_m) do
+			m[i+tam] = copy_m[i]
+		end
+
 	elseif data == ";" then
 	  print(";")
-      for _,child in ipairs(ast.children) do
+      for _,child in pairs(ast.children) do
         resolverComandos(e,s,m,c, child)
       end
 	end
