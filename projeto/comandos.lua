@@ -58,12 +58,22 @@ function resolverComandos(e,s,m,c, ast)
 
 		-- Condicional do while
 		c:pop(1)
-		resolverComandos(s,m,c,ast.children[1])
+		resolverComandos(e,s,m,c,ast.children[1])
+
+		copy_e = {}
+		for i,v in pairs(e) do
+			copy_e[i] = e[i]
+		end 
+
+		copy_m = {}
+		for i, v in pairs(m) do 
+			copy_m[i] = m[i]
+		end
 
 		if s:pop(1) == "tt" then
 			-- Bloco de comandos
-			resolverComandos(s,m,c, ast.children[2])
-			printSMC(e,s,m,c)
+			resolverComandos(copy_e,s,copy_m,c, ast.children[2])
+			printSMC(copy_e,s,copy_m,c)
 
 			c:pop(1)
 			c:push(commands)
@@ -73,9 +83,8 @@ function resolverComandos(e,s,m,c, ast)
 			c:push(commands)
 			c:pop(5)
 			s:pop(1)
-			print("Reexecutando")
-			resolverComandos(s,m,c, ast)
-			printSMC(e,s,m,c,nil)
+			resolverComandos(copy_e,s,copy_m,c, ast)
+			printSMC(copy_e,s,copy_m,c,nil)
 			return
 		else 
 			c:pop(1)

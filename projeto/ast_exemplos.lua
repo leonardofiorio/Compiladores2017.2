@@ -151,30 +151,30 @@ require "comandos"
  -- 		})
  -- 	})
 
- -- local ast = node("while", { --fatorial
- -- 	node("not", {
- -- 		node("eq", {
- -- 			node("fat",nil),
- -- 			node("0",nil),
- -- 			})
- -- 		}),
- -- 	node(";", {
- -- 			node("att", {
-	--  		node("result",nil),
-	--  		node("mul", {
-	--  			node("result",nil),
-	--  			node("fat",nil)
-	--  			})
-	--  		}),
-	--  	node("att", {
-	--  		node("fat",nil),
-	--  		node("sub", {
-	--  			node("fat",nil),
-	--  			node("1",nil)
-	--  			})
-	--  		})
- -- 		})
- -- 	})
+ local ast = node("while", { --fatorial
+ 	node("not", {
+ 		node("eq", {
+ 			node("fat",nil),
+ 			node("0",nil),
+ 			})
+ 		}),
+ 	node(";", {
+ 			node("att", {
+	 		node("result",nil),
+	 		node("mul", {
+	 			node("result",nil),
+	 			node("fat",nil)
+	 			})
+	 		}),
+	 	node("att", {
+	 		node("fat",nil),
+	 		node("sub", {
+	 			node("fat",nil),
+	 			node("1",nil)
+	 			})
+	 		})
+ 		})
+ 	})
 
 -- local ast = node("if", {
 -- 	node("eq", {
@@ -263,13 +263,63 @@ require "comandos"
 -- 		})
 -- 	})
 
+local ast = node(";",{
+		node("var",{
+			node("a",nil),
+			node("0",nil)			
+		}),
+		node("while",{
+			node("eq",{
+				node("a",nil),
+				node("0",nil)
+			}),
+			node("att",{
+				node("a",nil),
+				node("add",{
+					node("a",nil),
+					node("1",nil)
+				})
+			})
+		})
+})
+
+ -- local ast = node(";",{ -- Fatorial
+ -- 		node("var",{
+ -- 			node("fat",nil),
+ -- 			node("5",nil)
+ -- 		}),
+ -- 		node("var",{
+ -- 			node("result",nil),
+ -- 			node("1",nil)
+ -- 		}),
+	--  	node("while", { 
+	--  	node("not", {
+	--  		node("eq", {
+	--  			node("fat",nil),
+	--  			node("0",nil),
+	--  			})
+	--  		}),
+	--  	node(";", {
+	--  			node("att", {
+	-- 	 			node("result",nil),
+	-- 	 			node("mul", {
+	-- 	 				node("result",nil),
+	-- 	 				node("fat",nil)
+	-- 	 				})
+	-- 	 		}),
+	-- 	 	node("att", {
+	-- 	 		node("fat",nil),
+	-- 	 		node("sub", {
+	-- 	 			node("fat",nil),
+	-- 	 			node("1",nil)
+	-- 	 			})
+	-- 	 		})
+	--  		})
+	--  	}) 	
+ -- 	})
+
 
 
 print("\n\n\n\n\n\nÁrvore:\n")
 tree.show(ast)
 resolverComandos(e, s, m, c, ast)
-print("Final")
-printSMC(e,s,m,c)
-
--- if
---local ast = node(";", {node("<", {node("1", nil), node("2", nil)}), node("", ) , node("", )})
