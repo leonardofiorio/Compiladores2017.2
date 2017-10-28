@@ -7,31 +7,37 @@
 -- or
 --    lua bin/luafish.lua "code"
 
+local i = 0
 function printAST(ast)
-  print("\n\n")
+  -- ts[#ts+1] = 'tag=' .. string.format("%q", self.tag)
+  
+  for key,value in ipairs(ast) do
+    print(i)
+    i = i+1
+    -- print(key)
+    if type(value) == "number" then
+      value = tostring(value)
+    end
+    if value.tag then
+      print(value.tag)
+    end
+    if type(value) ~= "table" then
+      print(value)
+      print("\n")
+    elseif value and type(value) == "table" then
+      printAST(value)
+    end
+  end
+  -- print("\n\n")
   -- ast = string.gsub(tostring(ast), "{", "{\n")
   -- ast = string.gsub(tostring(ast), "}", "}\n")
   -- print(ast)
-  print("\n\n")
-  for key,value in ipairs(ast) do --each ';' determines 1 key
-    print(key)
-    print(value)
-  end
+  
+  -- for key,value in ipairs(ast) do --each ';' determines 1 key
+  --   print(value)
+  -- end
+  -- print(ast[1][2][1][3])
 end
-
--- function printAST(node, level)
---     if level == nil then
---         level = 0
---     end
---     if node ~= nil then
---         print(string.rep(" ", level) .. "Node[" .. node.data .. "]")
---         if(node.children ~= nil) then
---           for _, child in ipairs(node.children) do
---             Tree.show(child, level + 2)
---           end
---         end
---     end
--- end
 
 local macro = require 'luafish.macro'
 
