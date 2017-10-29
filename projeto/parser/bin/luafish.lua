@@ -8,15 +8,15 @@ local tree = require "luafish.tree"
 -- or
 --    lua bin/luafish.lua "code"
 
-local arv = node("eq", {
-    node("ff",nil),
-    node("eq", {
-      node("a",nil),
-      node("8",nil)
-      })
-  })
+-- local arv = node("eq", {
+--     node("ff",nil),
+--     node("eq", {
+--       node("a",nil),
+--       node("8",nil)
+--       })
+--   })
 
-  tree.show(arv)
+--   tree.show(arv)
 
 local i = 0
 function printAST(ast, currentNode)

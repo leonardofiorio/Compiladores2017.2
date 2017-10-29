@@ -110,23 +110,18 @@ end
 
 local anykeyword =
     P'and' +
-    P'break' +
     P'do' +
-    P'elseif' +
     P'else' +
     P'end' +
     P'false' +
     P'for' +
-    P'function' +
     P'if' +
-    P'in' +
     P'local' +
     P'var' +
     P'const' +
     P'nil' +
     P'not' +
     P'or' + 
-    P'repeat' +
     P'return' +
     P'then' +
     P'true' +
@@ -345,9 +340,7 @@ local function build_grammar(self)
   )
 
   grammar.productop = Cp() * (
-    cop'*' +
-    cop'/' +
-    cop'%'
+    cop'*' 
   )
 
   grammar.unaryop = Cp() * (
@@ -532,8 +525,8 @@ local function mark_linecols(ast, s, linecol)
 end
 
 function M:parse(o)
-  local text
-  if is_file then
+  local text -- variável local para armazenar o código a ser tratado
+  if is_file then -- se for um arquivo de entrada
     if io.type(o) then
       text = o:read"*a"
     elseif o == nil then
@@ -549,7 +542,7 @@ function M:parse(o)
       error(tostring(o) .. " not a recognized type", 2)
     end
     text = text:gsub("^#[^\n]*\n", "", 1)  -- remove any shebang line
-  else
+  else -- se o código foi passado como parâmetro
     for k,v in ipairs(o) do
       if k == 1 then
         text = v
