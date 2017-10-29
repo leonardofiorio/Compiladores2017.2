@@ -1,3 +1,4 @@
+local tree = require "luafish.tree"
 -- luafish.lua
 -- This is a front-end to the LuaFish macro processor.
 --
@@ -7,10 +8,19 @@
 -- or
 --    lua bin/luafish.lua "code"
 
+local arv = node("eq", {
+    node("ff",nil),
+    node("eq", {
+      node("a",nil),
+      node("8",nil)
+      })
+  })
+
+  tree.show(arv)
+
 local i = 0
-function printAST(ast)
+function printAST(ast, currentNode)
   -- ts[#ts+1] = 'tag=' .. string.format("%q", self.tag)
-  
   for key,value in ipairs(ast) do
     print(i)
     i = i+1
@@ -20,13 +30,16 @@ function printAST(ast)
     end
     if value.tag then
       print(value.tag)
+      addChild(currentNode, node(value.tag, nil))
     end
     if type(value) ~= "table" then
       print(value)
+      addChild(currentNode, node(value, nil))
       print("\n")
     elseif value and type(value) == "table" then
-      printAST(value)
+      printAST(value, currentNode.children[#currentNode.children])
     end
+    tree.show(currentNode)
   end
   -- print("\n\n")
   -- ast = string.gsub(tostring(ast), "{", "{\n")
@@ -62,5 +75,5 @@ local code = select(start, ...)
 local Parser = require 'luafish.parser'
 local p = Parser()
 print(p:parse{code, is_file})
-printAST(p:parse{code, is_file})
+printAST(p:parse{code, is_file}, node(";",nil))
 
