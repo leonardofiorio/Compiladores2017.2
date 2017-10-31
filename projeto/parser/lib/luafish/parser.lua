@@ -125,7 +125,6 @@ local anykeyword =
     P'return' +
     P'then' +
     P'true' +
-    P'until' +
     P'while'
 
 -- get line and column numbers from position i (1-based) in string s.

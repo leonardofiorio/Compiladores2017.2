@@ -84,7 +84,7 @@ function resolverComandos(e,s,m,c, ast)
 			c:pop(5)
 			s:pop(1)
 			resolverComandos(copy_e,s,copy_m,c, ast)
-			printSMC(copy_e,s,copy_m,c,nil)
+			printSMC(copy_e,s,copy_m,c)
 			return
 		else 
 			c:pop(1)

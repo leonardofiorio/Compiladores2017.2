@@ -151,30 +151,30 @@ require "comandos"
  -- 		})
  -- 	})
 
- local ast = node("while", { --fatorial
- 	node("not", {
- 		node("eq", {
- 			node("fat",nil),
- 			node("0",nil),
- 			})
- 		}),
- 	node(";", {
- 			node("att", {
-	 		node("result",nil),
-	 		node("mul", {
-	 			node("result",nil),
-	 			node("fat",nil)
-	 			})
-	 		}),
-	 	node("att", {
-	 		node("fat",nil),
-	 		node("sub", {
-	 			node("fat",nil),
-	 			node("1",nil)
-	 			})
-	 		})
- 		})
- 	})
+ -- local ast = node("while", { --fatorial
+ -- 	node("not", {
+ -- 		node("eq", {
+ -- 			node("fat",nil),
+ -- 			node("0",nil),
+ -- 			})
+ -- 		}),
+ -- 	node(";", {
+ -- 			node("att", {
+	--  		node("result",nil),
+	--  		node("mul", {
+	--  			node("result",nil),
+	--  			node("fat",nil)
+	--  			})
+	--  		}),
+	--  	node("att", {
+	--  		node("fat",nil),
+	--  		node("sub", {
+	--  			node("fat",nil),
+	--  			node("1",nil)
+	--  			})
+	--  		})
+ -- 		})
+ -- 	})
 
 -- local ast = node("if", {
 -- 	node("eq", {
@@ -252,36 +252,36 @@ require "comandos"
 -- 		})
 -- 	})
 
--- local ast = node(";",{
--- 		node("const",{
--- 			node("a",nil),
--- 			node("2",nil)
--- 		}),
--- 		node("att",{
--- 			node("a", nil),
--- 			node("9", nil)
--- 		})
--- 	})
-
 local ast = node(";",{
-		node("var",{
+		node("const",{
 			node("a",nil),
-			node("0",nil)			
+			node("2",nil)
 		}),
-		node("while",{
-			node("eq",{
-				node("a",nil),
-				node("0",nil)
-			}),
-			node("att",{
-				node("a",nil),
-				node("add",{
-					node("a",nil),
-					node("1",nil)
-				})
-			})
+		node("att",{
+			node("a", nil),
+			node("9", nil)
 		})
-})
+	})
+
+-- local ast = node(";",{
+-- 		node("var",{
+-- 			node("a",nil),
+-- 			node("0",nil)			
+-- 		}),
+-- 		node("while",{
+-- 			node("eq",{
+-- 				node("a",nil),
+-- 				node("0",nil)
+-- 			}),
+-- 			node("att",{
+-- 				node("a",nil),
+-- 				node("add",{
+-- 					node("a",nil),
+-- 					node("1",nil)
+-- 				})
+-- 			})
+-- 		})
+-- })
 
  -- local ast = node(";",{ -- Fatorial
  -- 		node("var",{

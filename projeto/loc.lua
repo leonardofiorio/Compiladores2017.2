@@ -1,7 +1,7 @@
 Loc = {}
 Loc.__index = Loc
 
-function Loc:new (id, value)
+function Loc:new(id, value)
 	l = {}
 	setmetatable(l, Loc)
 	l.id = id
@@ -18,17 +18,6 @@ function Loc:getId()
 end
 
 function Loc:isLoc(obj)
-	-- if obj.value ~= nil then
-	-- 	return true
-	-- end
-
-	-- for i,v in pairs(e) do
-	-- 	if i == obj.data then
-	-- 		return true
-	-- 	end
-	-- end
-
-	-- return false
 	if tonumber(obj) == nil then
 		return true
 	end
