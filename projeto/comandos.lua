@@ -3,7 +3,7 @@ tree = require "tree"
 lpeg = require"lpeg"
 loc = require "loc"
 
-local exp = lpeg.S"add" + lpeg.S"sub" + lpeg.S"mul" + lpeg.S"eq" + lpeg.S"not" + lpeg.S"att" + lpeg.S"or"
+local exp = lpeg.S"add" + lpeg.S"sub" + lpeg.S"mul" + lpeg.S"eq" + lpeg.S"not" + lpeg.S"att" + lpeg.S"or"+lpeg.S"Set"
 
 function resolverComandos(e,s,m,c, ast)
 	local data
@@ -17,22 +17,23 @@ function resolverComandos(e,s,m,c, ast)
 		s:pop(1)
 		return resolverExpressoes(e,s,m,c, ast)
 
-	elseif data == "var" then
+	elseif data == "Var" then
 		c:push("var")
 		size = table.maxn(m)
 		val = resolverExpressoes(e,s,m,c, ast.children[2])
 		c:push(val)
 		obj = Loc:new(size+1,val)
 		m[size+1] = obj
-		e[ast.children[1].data] = obj
+		e[ast.children[1].children[1].children[1].data] = obj
 		c:pop(3)
 		return
-	elseif data == "const" then
+	elseif data == "Const" then
 		c:push("const") 
-		val = resolverExpressoes(e,s,m,c, ast.children[2])
+		val = resolverExpressoes(e,s,m,c, ast.children[2].children[1].children[1])
 		c:push(val)
-		e[ast.children[1].data] = val
+		e[ast.children[1].children[1].children[1].data] = val
 		c:pop(3)
+		printSMC(e,s,m,c)
 		return
 	elseif data == "while" then
 		conditional = getString(ast.children[1])
@@ -144,7 +145,7 @@ function resolverComandos(e,s,m,c, ast)
 			m[i+tam] = copy_m[i]
 		end
 
-	elseif data == ";" then
+	elseif data == ";" or "Block" then
 	  print(";")
       for _,child in pairs(ast.children) do
         resolverComandos(e,s,m,c, child)

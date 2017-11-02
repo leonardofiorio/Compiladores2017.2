@@ -1,5 +1,6 @@
 local tree = require "luafish.tree"
 local convert = require "luafish.convert"
+local comandos = require "comandos"
 
 -- luafish.lua
 -- This is a front-end to the LuaFish macro processor.
@@ -80,6 +81,5 @@ local p = Parser()
 retorno = node(";",nil)
 printAST(p:parse{code, is_file}, retorno)
 print("Convertendo árvore")
-convert_ast(retorno)
-print("Término da conversão")
-
+resolverComandos(e,s,m,c,retorno)
+printSMC(e,s,m,c)

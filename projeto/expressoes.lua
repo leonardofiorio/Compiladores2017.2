@@ -18,6 +18,7 @@ function resolverExpressoes(e,s,m,c,ast)
   if ast ~= nil then
     local data = getData(ast, e)
 
+    print(data)
 
     if (tonumber(data) ~= nil) then
       num = tonumber(data)
@@ -134,13 +135,17 @@ function resolverExpressoes(e,s,m,c,ast)
       printSMC(e,s,m,c)
       return resultado
 
-  	elseif data == "att" then --attribution
+  	--elseif data == "att" then --attribution
+    elseif data == "Set" then
       print("ATT")
       print("Expressão pósfixada em C")
       c:push("att")
       printSMC(e,s,m,c)
 
-      aux = e[ast.children[1].data]
+      --aux = e[ast.children[1].data]
+      -- Com parser:
+      aux = e[ast.children[1].children[1].children[1].data]
+
       if Loc:isLoc(aux) == false then
         print("Error!!!")
         return
@@ -148,13 +153,13 @@ function resolverExpressoes(e,s,m,c,ast)
 
       flag = false
       for i,v in pairs(e) do
-        if i == ast.children[1].data then
+        if i == ast.children[1].children[1].children[1].data then
           flag = true
         end
       end
 
       if flag then
-        local var = ast.children[1].data
+        local var = ast.children[1].children[1].children[1].data
         c:push(var)
         size = table.maxn(m)
         resultado = resolverExpressoes(e,s,m,c, ast.children[2])
@@ -186,7 +191,8 @@ function resolverExpressoes(e,s,m,c,ast)
       end
       printSMC(e,s,m,c)
       return resultado
-
+    elseif data == "Op" or data== "ExpList" or data=="Number" then
+      return resolverExpressoes(e,s,m,c, ast.children[1])
     elseif data == ";" then
       for _,child in ipairs(ast.children) do
         resolverExpressoes(e,s,m,c, child)
