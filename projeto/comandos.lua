@@ -26,6 +26,7 @@ function resolverComandos(e,s,m,c, ast)
 		m[size+1] = obj
 		e[ast.children[1].children[1].children[1].data] = obj
 		c:pop(3)
+		printSMC(e,s,m,c)
 		return
 	elseif data == "Const" then
 		c:push("const") 
@@ -36,8 +37,8 @@ function resolverComandos(e,s,m,c, ast)
 		printSMC(e,s,m,c)
 		return
 	elseif data == "while" then
-		conditional = getString(ast.children[1])
-		commands = getString(ast.children[2])
+		conditional = getString(ast.children[1].children[1])
+		commands = getString(ast.children[2].children[1])
 
 		print("Resolvendo while")
 		-- Empilhando while em C
@@ -59,7 +60,7 @@ function resolverComandos(e,s,m,c, ast)
 
 		-- Condicional do while
 		c:pop(1)
-		resolverComandos(e,s,m,c,ast.children[1])
+		resolverExpressoes(e,s,m,c,ast.children[1])
 
 		copy_e = {}
 		for i,v in pairs(e) do
@@ -89,19 +90,20 @@ function resolverComandos(e,s,m,c, ast)
 			return
 		else 
 			c:pop(1)
+			print("O while terminou")	
 			return 
 		end 
 		return
 	elseif data == "if" then
-		commands_else = getString(ast.children[3])
-		commands = getString(ast.children[2])
+		commands_else = getString(ast.children[3].children[1])
+		commands = getString(ast.children[2].children[1])
 
 		c:push(commands_else)
 		c:push("else")
 		c:push(commands)
 		c:push("then")
 
-		conditional = getString(ast.children[1])
+		conditional = getString(ast.children[1].children[1])
 
 		c:push(conditional)
 		c:push("if")
@@ -144,6 +146,8 @@ function resolverComandos(e,s,m,c, ast)
 		for i,v in pairs(copy_m) do
 			m[i+tam] = copy_m[i]
 		end
+
+		print("O If terminou")
 
 	elseif data == ";" or "Block" then
 	  print(";")

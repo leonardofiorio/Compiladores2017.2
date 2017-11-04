@@ -111,17 +111,17 @@ function resolverExpressoes(e,s,m,c,ast)
       printSMC(e,s,m,c)
       return resultado
 
-  	elseif data == "eq" then
-      print("EQ")
-      print("Expressão pósfixada em C")
-      c:push("eq")
-      printSMC(e,s,m,c)
-      resultado = getBoolean(resolverExpressoes(e,s,m,c, ast.children[1]) == resolverExpressoes(e,s,m,c, ast.children[2]))
-      --s:pop(1)
-      s:push(resultado)
-      c:pop(3)
-      printSMC(e,s,m,c)
-      return resultado
+  	-- elseif data == "eq" then
+   --    print("EQ")
+   --    print("Expressão pósfixada em C")
+   --    c:push("eq")
+   --    printSMC(e,s,m,c)
+   --    resultado = getBoolean(resolverExpressoes(e,s,m,c, ast.children[1]) == resolverExpressoes(e,s,m,c, ast.children[2]))
+   --    --s:pop(1)
+   --    s:push(resultado)
+   --    c:pop(3)
+   --    printSMC(e,s,m,c)
+   --    return resultado
 
   	elseif data == "not" then
       print("NOT")
@@ -191,8 +191,24 @@ function resolverExpressoes(e,s,m,c,ast)
       end
       printSMC(e,s,m,c)
       return resultado
-    elseif data == "Op" or data== "ExpList" or data=="Number" then
+    elseif data== "ExpList" or data=="Number" then
       return resolverExpressoes(e,s,m,c, ast.children[1])
+    
+    elseif data == "Op" then
+      print(ast.children[1].data) 
+      if ast.children[1].data == "==" then
+        print("EQ")
+        print("Expressão pósfixada em C")
+        c:push("eq")
+        printSMC(e,s,m,c)
+        resultado = getBoolean(resolverExpressoes(e,s,m,c, ast.children[2]) == resolverExpressoes(e,s,m,c, ast.children[3]))
+        --s:pop(1)
+        s:push(resultado)
+        c:pop(3)
+        printSMC(e,s,m,c)
+        return resultado
+      end
+
     elseif data == ";" then
       for _,child in ipairs(ast.children) do
         resolverExpressoes(e,s,m,c, child)

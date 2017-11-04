@@ -352,7 +352,7 @@ local function build_grammar(self)
   grammar.term =
     (C2'Nil' * keyword'nil') / self.handle_nil + 
     (C2'False' * keyword'false') / self.handle_false +
-    (C2'True' * keyword'true') / self.handle_true +
+    (C2'tt' * keyword'tt') / self.handle_true +
     (C2'Number' * ws^-1 * C(number)) / self.handle_number +
     (C2'String' * ws^-1 * C(luastring)) / self.handle_string +
     (C2'Dots' * op'...') / self.handle_dots +
