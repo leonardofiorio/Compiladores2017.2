@@ -21,7 +21,8 @@ function resolverComandos(e,s,m,c, ast)
 		c:push("var")
 		size = table.maxn(m)
 		val = resolverExpressoes(e,s,m,c, ast.children[2])
-		c:push(val)
+		str = getString(ast.children[2])
+		c:push(str)
 		obj = Loc:new(size+1,val)
 		m[size+1] = obj
 		e[ast.children[1].children[1].children[1].data] = obj

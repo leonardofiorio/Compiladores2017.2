@@ -69,23 +69,23 @@ function resolverExpressoes(e,s,m,c,ast)
         commands_else = resolverExpressoes(e,s,m,c, ast.children[3])
         return commands_else
       end
-    elseif data == "add" then
-      print("ADD")
-      print("Expressão pósfixada em C")
-      c:push("add")
-      printSMC(e,s,m,c)
+    -- elseif data == "add"then
+    --   print("ADD")
+    --   print("Expressão pósfixada em C")
+    --   c:push("add")
+    --   printSMC(e,s,m,c)
 
-      val1 = resolverExpressoes(e,s,m,c,ast.children[1])
-      val2 = resolverExpressoes(e,s,m,c, ast.children[2])
+    --   val1 = resolverExpressoes(e,s,m,c,ast.children[1])
+    --   val2 = resolverExpressoes(e,s,m,c, ast.children[2])
 
 
-      resultado = val1+val2
-      s:pop(1)
-      s:push(resultado)
-      c:pop(3)
-      printSMC(e,s,m,c)
-      s:pop(1)
-      return resultado
+    --   resultado = val1+val2
+    --   s:pop(1)
+    --   s:push(resultado)
+    --   c:pop(3)
+    --   printSMC(e,s,m,c)
+    --   s:pop(1)
+    --   return resultado
 
     elseif data == "sub" then
       print("SUB")
@@ -207,7 +207,27 @@ function resolverExpressoes(e,s,m,c,ast)
         c:pop(3)
         printSMC(e,s,m,c)
         return resultado
+      elseif ast.children[1].data == "+" then
+        print("+")
+        print("Expressão pósfixada em C")
+        c:push("add")
+        printSMC(e,s,m,c)
+        val1 = resolverExpressoes(e,s,m,c,ast.children[2])
+        val2 = resolverExpressoes(e,s,m,c, ast.children[3])
+
+        print(val2)
+
+        resultado = val1+val2
+
+        s:pop(1)
+        s:push(resultado)
+        c:pop(3)
+        printSMC(e,s,m,c)
+        s:pop(1)
+        return resultado
       end
+    elseif data == "Id" then
+      return resolverExpressoes(e,s,m,c, ast.children[1])
 
     elseif data == ";" then
       for _,child in ipairs(ast.children) do
@@ -303,7 +323,7 @@ function getString(ast)
   local s = ""
   if ast ~=nil then
     if (ast.data == "add") or (ast.data == "sub") or (ast.data == "mul") or 
-      (ast.data == "eq") or (ast.data == "att") or (ast.data == "or") or (ast.data == "and")then
+      (ast.data == "eq") or (ast.data == "att") or (ast.data == "or") or (ast.data == "and") then
       if ast.children ~= nil then
         s = s .. "(" .. getString(ast.children[1]).. " " ..ast.data .. " " .. getString(ast.children[2]) .. ")"
       else
@@ -311,7 +331,25 @@ function getString(ast)
       end
       return s
     elseif ast.data == "not" then
-       s = s .. "not " .. getString(ast.children[1])
+       return s .. "not " .. getString(ast.children[1])
+    elseif ast.data == "Var" then
+      return s .. "(var " .. getString(ast.children[1]) ..  "="  .. getString(ast.children[2]).. ") "
+    elseif ast.data == "NameList" then
+      return getString(ast.children[1]) 
+    elseif ast.data == "Id" then
+      return getString(ast.children[1]) 
+    elseif ast.data == "ExpList" then
+      return getString(ast.children[1])
+    elseif ast.data == "Number" then
+      return getString(ast.children[1])
+    elseif ast.data == "Set" then
+      return s .. getString(ast.children[1]) .. "=" .. getString(ast.children[2])
+    elseif ast.data == "VarList" then
+      return getString(ast.children[1])
+    elseif ast.data == "Op" then
+      if ast.children[1].data == "+" then
+        return getString(ast.children[2]) .. "+" .. getString(ast.children[3])
+      end
     else
       return ast.data
     end
