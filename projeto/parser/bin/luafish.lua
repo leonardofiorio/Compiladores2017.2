@@ -1,57 +1,33 @@
 local tree = require "luafish.tree"
 local comandos = require "comandos"
 
--- luafish.lua
--- This is a front-end to the LuaFish macro processor.
---
--- Example usage:
---    export LUA_PATH='lib/?.lua;examples/?.lua;?.lua'
---    lua bin/luafish.lua examples/type_usage2.lua
--- or
---    lua bin/luafish.lua "code"
-
--- local arv = node("eq", {
---     node("ff",nil),
---     node("eq", {
---       node("a",nil),
---       node("8",nil)
---       })
---   })
-
---   tree.show(arv)
+--    EXEMPLO OF USAGE ON PROJECT DIRECTORY: 
+--    export LUA_PATH='parser/lib/?.lua;parser/examples/?.lua;?.lua'
+--    lua parser/bin/luafish.lua "code"
 
 local i = 0
 function printAST(ast, currentNode)
   -- ts[#ts+1] = 'tag=' .. string.format("%q", self.tag)
   for key,value in ipairs(ast) do
-    --print(i)
+    print(i)
     i = i+1
     -- print(key)
     if type(value) == "number" then
       value = tostring(value)
     end
     if value.tag then
-      --print(value.tag)
+      print(value.tag)
       addChild(currentNode, node(value.tag, nil))
     end
     if type(value) ~= "table" then
-      --print(value)
+      print(value)
       addChild(currentNode, node(value, nil))
-      --print("\n")
+      print("\n")
     elseif value and type(value) == "table" then
       printAST(value, currentNode.children[#currentNode.children])
     end
     tree.show(currentNode)
   end
-  -- print("\n\n")
-  -- ast = string.gsub(tostring(ast), "{", "{\n")
-  -- ast = string.gsub(tostring(ast), "}", "}\n")
-  -- print(ast)
-  
-  -- for key,value in ipairs(ast) do --each ';' determines 1 key
-  --   print(value)
-  -- end
-  -- print(ast[1][2][1][3])
 end
 
 local macro = require 'luafish.macro'
