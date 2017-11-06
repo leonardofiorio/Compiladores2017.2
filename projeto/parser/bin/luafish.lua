@@ -24,20 +24,20 @@ local i = 0
 function printAST(ast, currentNode)
   -- ts[#ts+1] = 'tag=' .. string.format("%q", self.tag)
   for key,value in ipairs(ast) do
-    print(i)
+    --print(i)
     i = i+1
     -- print(key)
     if type(value) == "number" then
       value = tostring(value)
     end
     if value.tag then
-      print(value.tag)
+      --print(value.tag)
       addChild(currentNode, node(value.tag, nil))
     end
     if type(value) ~= "table" then
-      print(value)
+      --print(value)
       addChild(currentNode, node(value, nil))
-      print("\n")
+      --print("\n")
     elseif value and type(value) == "table" then
       printAST(value, currentNode.children[#currentNode.children])
     end

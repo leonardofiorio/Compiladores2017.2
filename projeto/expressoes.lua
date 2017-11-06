@@ -367,6 +367,8 @@ function getString(ast)
         return getString(ast.children[2]) .. "+" .. getString(ast.children[3])
       elseif ast.children[1].data == "==" then
         return getString(ast.children[2]) .. "==" .. getString(ast.children[3])
+      elseif ast.children[1].data == "*" then
+        return getString(ast.children[2]) .. "*" .. getString(ast.children[3])
       end
     elseif ast.data == "Block" then
       local s

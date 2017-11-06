@@ -248,8 +248,6 @@ local function build_grammar(self)
     (C2'while' * keyword'while' * V'exp' * keyword'do' *
         V'block' * keyword'end')
         / self.handle_while +
-    (C2'Repeat' * keyword'repeat' * V'block' * keyword'until' * V'exp')
-        / self.handle_repeat +
     (C2'if' * keyword'if' * V'exp' * keyword'then' * V'block' *
         (keyword'elseif' * V'exp' * keyword'then' * V'block')^0 *
         (keyword'else' * V'block')^-1 *
@@ -492,7 +490,6 @@ setmetatable(M, {__call = function()
   self.handle_set = generic_handle
   self.handle_do = generic_handle
   self.handle_while = generic_handle
-  self.handle_repeat = generic_handle
   self.handle_if = generic_handle
   self.handle_fornum = generic_handle
   self.handle_forin = generic_handle
