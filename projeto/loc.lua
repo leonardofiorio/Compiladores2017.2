@@ -18,7 +18,7 @@ function Loc:getId()
 end
 
 function Loc:isLoc(obj)
-	if tonumber(obj) == nil then
+	if type(obj) == "table" then
 		return true
 	end
 	return false
