@@ -1,5 +1,4 @@
 local tree = require "luafish.tree"
-local convert = require "luafish.convert"
 local comandos = require "comandos"
 
 -- luafish.lua

@@ -18,8 +18,6 @@ function resolverExpressoes(e,s,m,c,ast)
   if ast ~= nil then
     local data = getData(ast, e)
 
-    print(data)
-
     if (tonumber(data) ~= nil) then
       num = tonumber(data)
       c:push(num)
@@ -89,7 +87,7 @@ function resolverExpressoes(e,s,m,c,ast)
 
     elseif data == "sub" then
       print("SUB")
-      print("Expressão pósfixada em C")
+      --print("Expressão pósfixada em C")
       c:push("sub")
       printSMC(e,s,m,c)
       resultado = resolverExpressoes(e,s,m,c, ast.children[1]) - resolverExpressoes(e,s,m,c, ast.children[2])
@@ -101,7 +99,7 @@ function resolverExpressoes(e,s,m,c,ast)
       
     elseif data == "mul" then
       print("MUL")
-      print("Expressão pósfixada em C")
+      --print("Expressão pósfixada em C")
       c:push("mul")
       printSMC(e,s,m,c)
       resultado = resolverExpressoes(e,s,m,c, ast.children[1]) * resolverExpressoes(e,s,m,c, ast.children[2])
@@ -125,7 +123,7 @@ function resolverExpressoes(e,s,m,c,ast)
 
   	elseif data == "not" then
       print("NOT")
-      print("Expressão pósfixada em C")
+      --print("Expressão pósfixada em C")
       c:push("not")
       printSMC(e,s,m,c)
       resultado = getNot(resolverExpressoes(e,s,m,c, ast.children[1], true))
@@ -138,7 +136,7 @@ function resolverExpressoes(e,s,m,c,ast)
   	--elseif data == "att" then --attribution
     elseif data == "Set" then
       print("ATT")
-      print("Expressão pósfixada em C")
+      --print("Expressão pósfixada em C")
       c:push("att")
       printSMC(e,s,m,c)
 
@@ -176,7 +174,7 @@ function resolverExpressoes(e,s,m,c,ast)
       return
   	elseif data == "or" then
       print("OR")
-      print("Expressão pósfixada em C")
+      --print("Expressão pósfixada em C")
       c:push("or")
       printSMC(e,s,m,c)
       local val1 = resolverExpressoes(e,s,m,c, ast.children[1])
@@ -195,10 +193,9 @@ function resolverExpressoes(e,s,m,c,ast)
       return resolverExpressoes(e,s,m,c, ast.children[1])
     
     elseif data == "Op" then
-      print(ast.children[1].data) 
       if ast.children[1].data == "==" then
         print("EQ")
-        print("Expressão pósfixada em C")
+        --print("Expressão pósfixada em C")
         c:push("eq")
         printSMC(e,s,m,c)
         resultado = getBoolean(resolverExpressoes(e,s,m,c, ast.children[2]) == resolverExpressoes(e,s,m,c, ast.children[3]))
@@ -208,14 +205,11 @@ function resolverExpressoes(e,s,m,c,ast)
         printSMC(e,s,m,c)
         return resultado
       elseif ast.children[1].data == "+" then
-        print("+")
-        print("Expressão pósfixada em C")
+        --print("Expressão pósfixada em C")
         c:push("add")
         printSMC(e,s,m,c)
         val1 = resolverExpressoes(e,s,m,c,ast.children[2])
         val2 = resolverExpressoes(e,s,m,c, ast.children[3])
-
-        print(val2)
 
         resultado = val1+val2
 
@@ -349,7 +343,15 @@ function getString(ast)
     elseif ast.data == "Op" then
       if ast.children[1].data == "+" then
         return getString(ast.children[2]) .. "+" .. getString(ast.children[3])
+      elseif ast.children[1].data == "==" then
+        return getString(ast.children[2]) .. "==" .. getString(ast.children[3])
       end
+    elseif ast.data == "Block" then
+      local s
+      for _,child in pairs(ast.children) do
+        s = s .. getString(child)
+      end
+      return s
     else
       return ast.data
     end

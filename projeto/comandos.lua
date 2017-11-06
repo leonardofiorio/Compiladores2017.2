@@ -88,12 +88,22 @@ function resolverComandos(e,s,m,c, ast)
 			s:pop(1)
 			resolverComandos(copy_e,s,copy_m,c, ast)
 			printSMC(copy_e,s,copy_m,c)
-			return
 		else 
 			c:pop(1)
-			print("O while terminou")	
-			return 
+			--print("O while terminou")	
 		end 
+
+		tam = table.maxn(m)
+		for i=tam+1, table.maxn(copy_m),1 do
+			m[i] = copy_m[i]
+		end
+
+		for i,v in pairs(copy_e) do
+			if e[i] ~= nil then
+				e[i] = copy_e[i]
+			end
+		end
+
 		return
 	elseif data == "if" then
 		commands_else = getString(ast.children[3].children[1])
@@ -144,13 +154,19 @@ function resolverComandos(e,s,m,c, ast)
 		end
 
 		tam = table.maxn(m)
-		for i,v in pairs(copy_m) do
-			m[i+tam] = copy_m[i]
+		for i=tam+1, table.maxn(copy_m),1 do
+			m[i] = copy_m[i]
 		end
 
-		print("O If terminou")
+		for i,v in pairs(copy_e) do
+			if e[i] ~= nil then
+				e[i] = copy_e[i]
+			end
+		end
 
-	elseif data == ";" or "Block" then
+		--print("O If terminou")
+
+	elseif data == ";" or data=="Block" then
 	  print(";")
       for _,child in pairs(ast.children) do
         resolverComandos(e,s,m,c, child)
