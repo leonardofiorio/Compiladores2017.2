@@ -85,29 +85,29 @@ function resolverExpressoes(e,s,m,c,ast)
     --   s:pop(1)
     --   return resultado
 
-    elseif data == "sub" then
-      print("SUB")
-      --print("Expressão pósfixada em C")
-      c:push("sub")
-      printSMC(e,s,m,c)
-      resultado = resolverExpressoes(e,s,m,c, ast.children[1]) - resolverExpressoes(e,s,m,c, ast.children[2])
-      s:pop(1)
-      s:push(resultado)
-      c:pop(3)
-      printSMC(e,s,m,c)
-      return resultado
+    -- elseif data == "sub" then
+    --   print("SUB")
+    --   --print("Expressão pósfixada em C")
+    --   c:push("sub")
+    --   printSMC(e,s,m,c)
+    --   resultado = resolverExpressoes(e,s,m,c, ast.children[1]) - resolverExpressoes(e,s,m,c, ast.children[2])
+    --   s:pop(1)
+    --   s:push(resultado)
+    --   c:pop(3)
+    --   printSMC(e,s,m,c)
+    --   return resultado
       
-    elseif data == "mul" then
-      print("MUL")
-      --print("Expressão pósfixada em C")
-      c:push("mul")
-      printSMC(e,s,m,c)
-      resultado = resolverExpressoes(e,s,m,c, ast.children[1]) * resolverExpressoes(e,s,m,c, ast.children[2])
-      s:pop(1)
-      s:push(resultado)
-      c:pop(3)
-      printSMC(e,s,m,c)
-      return resultado
+    -- elseif data == "mul" then
+    --   print("MUL")
+    --   --print("Expressão pósfixada em C")
+    --   c:push("mul")
+    --   printSMC(e,s,m,c)
+    --   resultado = resolverExpressoes(e,s,m,c, ast.children[1]) * resolverExpressoes(e,s,m,c, ast.children[2])
+    --   s:pop(1)
+    --   s:push(resultado)
+    --   c:pop(3)
+    --   printSMC(e,s,m,c)
+    --   return resultado
 
   	-- elseif data == "eq" then
    --    print("EQ")
@@ -218,6 +218,28 @@ function resolverExpressoes(e,s,m,c,ast)
         c:pop(3)
         printSMC(e,s,m,c)
         s:pop(1)
+        return resultado
+      elseif ast.children[1].data == "-" then
+              print("SUB")
+      --print("Expressão pósfixada em C")
+        c:push("sub")
+        printSMC(e,s,m,c)
+        resultado = resolverExpressoes(e,s,m,c, ast.children[2]) - resolverExpressoes(e,s,m,c, ast.children[3])
+        s:pop(1)
+        s:push(resultado)
+        c:pop(3)
+        printSMC(e,s,m,c)
+        return resultado
+      elseif ast.children[1].data == "*" then
+        print("MUL")
+        --print("Expressão pósfixada em C")
+        c:push("mul")
+        printSMC(e,s,m,c)
+        resultado = resolverExpressoes(e,s,m,c, ast.children[2]) * resolverExpressoes(e,s,m,c, ast.children[3])
+        s:pop(1)
+        s:push(resultado)
+        c:pop(3)
+        printSMC(e,s,m,c)
         return resultado
       end
     elseif data == "Id" then
