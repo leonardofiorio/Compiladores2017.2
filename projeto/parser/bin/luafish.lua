@@ -1,25 +1,9 @@
 local tree = require "luafish.tree"
-local convert = require "luafish.convert"
 local comandos = require "comandos"
 
--- luafish.lua
--- This is a front-end to the LuaFish macro processor.
---
--- Example usage:
---    export LUA_PATH='lib/?.lua;examples/?.lua;?.lua'
---    lua bin/luafish.lua examples/type_usage2.lua
--- or
---    lua bin/luafish.lua "code"
-
--- local arv = node("eq", {
---     node("ff",nil),
---     node("eq", {
---       node("a",nil),
---       node("8",nil)
---       })
---   })
-
---   tree.show(arv)
+--    EXEMPLO OF USAGE ON PROJECT DIRECTORY: 
+--    export LUA_PATH='parser/lib/?.lua;parser/examples/?.lua;?.lua'
+--    lua parser/bin/luafish.lua "code"
 
 local i = 0
 function printAST(ast, currentNode)
@@ -44,15 +28,6 @@ function printAST(ast, currentNode)
     end
     tree.show(currentNode)
   end
-  -- print("\n\n")
-  -- ast = string.gsub(tostring(ast), "{", "{\n")
-  -- ast = string.gsub(tostring(ast), "}", "}\n")
-  -- print(ast)
-  
-  -- for key,value in ipairs(ast) do --each ';' determines 1 key
-  --   print(value)
-  -- end
-  -- print(ast[1][2][1][3])
 end
 
 local macro = require 'luafish.macro'
