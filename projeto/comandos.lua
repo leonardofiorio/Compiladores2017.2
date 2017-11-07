@@ -90,7 +90,6 @@ function resolverComandos(e,s,m,c, ast)
 			printSMC(copy_e,s,copy_m,c)
 		else 
 			c:pop(1)
-			s:pop(2)
 			--print("O while terminou")	
 		end 
 
@@ -98,14 +97,27 @@ function resolverComandos(e,s,m,c, ast)
 		for i=tam+1, table.maxn(copy_m),1 do
 			m[i] = copy_m[i]
 		end
-		
+
+		for i,v in pairs(copy_e) do
+			if e[i] ~= nil then
+				e[i] = copy_e[i]
+			end
+		end
+
 		return
 	elseif data == "if" then
-		commands_else = getString(ast.children[3].children[1])
 		commands = getString(ast.children[2].children[1])
 
-		c:push(commands_else)
-		c:push("else")
+		local hasElse = false
+		if ast.children[3] then
+			hasElse =true
+		end
+
+		if hasElse then
+			commands_else = getString(ast.children[3].children[1])
+			c:push(commands_else)
+			c:push("else")
+		end
 		c:push(commands)
 		c:push("then")
 
@@ -144,13 +156,19 @@ function resolverComandos(e,s,m,c, ast)
 
 		if t == "tt" then 
 			commands = resolverComandos(copy_e,s,copy_m,c, ast.children[2])
-		elseif t == "ff" then
+		elseif t == "ff" and hasElse then
 			commands_else = resolverComandos(copy_e,s,copy_m,c, ast.children[3])
 		end
 
 		tam = table.maxn(m)
 		for i=tam+1, table.maxn(copy_m),1 do
 			m[i] = copy_m[i]
+		end
+
+		for i,v in pairs(copy_e) do
+			if e[i] ~= nil then
+				e[i] = copy_e[i]
+			end
 		end
 
 		--print("O If terminou")
