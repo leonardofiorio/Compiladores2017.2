@@ -90,18 +90,13 @@ function resolverComandos(e,s,m,c, ast)
 			printSMC(copy_e,s,copy_m,c)
 		else 
 			c:pop(1)
+			s:pop(2)
 			--print("O while terminou")	
 		end 
 
 		tam = table.maxn(m)
 		for i=tam+1, table.maxn(copy_m),1 do
 			m[i] = copy_m[i]
-		end
-
-		for i,v in pairs(copy_e) do
-			if e[i] ~= nil then
-				e[i] = copy_e[i]
-			end
 		end
 
 		return
@@ -163,12 +158,6 @@ function resolverComandos(e,s,m,c, ast)
 		tam = table.maxn(m)
 		for i=tam+1, table.maxn(copy_m),1 do
 			m[i] = copy_m[i]
-		end
-
-		for i,v in pairs(copy_e) do
-			if e[i] ~= nil then
-				e[i] = copy_e[i]
-			end
 		end
 
 		--print("O If terminou")
