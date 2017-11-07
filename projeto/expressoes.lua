@@ -27,7 +27,7 @@ function resolverExpressoes(e,s,m,c,ast)
     --   return data.value
 
   	elseif data == "tt" or data == "ff" then
-      c:push(data)
+      s:push(data)
       printSMC(e,s,m,c)
       return data
 
@@ -121,17 +121,17 @@ function resolverExpressoes(e,s,m,c,ast)
    --    printSMC(e,s,m,c)
    --    return resultado
 
-  	elseif data == "not" then
-      print("NOT")
-      --print("Expressão pósfixada em C")
-      c:push("not")
-      printSMC(e,s,m,c)
-      resultado = getNot(resolverExpressoes(e,s,m,c, ast.children[1], true))
-      s:pop(1)
-      s:push(resultado)
-      c:pop(2)--dois pops?
-      printSMC(e,s,m,c)
-      return resultado
+  	-- elseif data == "not" then
+   --    print("NOT")
+   --    --print("Expressão pósfixada em C")
+   --    c:push("not")
+   --    printSMC(e,s,m,c)
+   --    resultado = getNot(resolverExpressoes(e,s,m,c, ast.children[1], true))
+   --    s:pop(1)
+   --    s:push(resultado)
+   --    c:pop(2)--dois pops?
+   --    printSMC(e,s,m,c)
+   --    return resultado
 
   	--elseif data == "att" then --attribution
     elseif data == "Set" then
@@ -211,6 +211,9 @@ function resolverExpressoes(e,s,m,c,ast)
         val1 = resolverExpressoes(e,s,m,c,ast.children[2])
         val2 = resolverExpressoes(e,s,m,c, ast.children[3])
 
+        print(val1)
+        print(val2)
+
         resultado = val1+val2
 
         s:pop(1)
@@ -241,10 +244,22 @@ function resolverExpressoes(e,s,m,c,ast)
         c:pop(3)
         printSMC(e,s,m,c)
         return resultado
+      elseif ast.children[1].data == "Not" then
+        print("NOT")
+      --print("Expressão pósfixada em C")
+        c:push("not")
+        printSMC(e,s,m,c)
+        resultado = getNot(resolverExpressoes(e,s,m,c, ast.children[2], true))
+        s:pop(1)
+        s:push(resultado)
+        c:pop(2)
+        printSMC(e,s,m,c)
+        return resultado
       end
     elseif data == "Id" then
       return resolverExpressoes(e,s,m,c, ast.children[1])
-
+    elseif data == "Paren" then
+      return resolverExpressoes(e,s,m,c, ast.children[1])
     elseif data == ";" then
       for _,child in ipairs(ast.children) do
         resolverExpressoes(e,s,m,c, child)

@@ -90,6 +90,7 @@ function resolverComandos(e,s,m,c, ast)
 			printSMC(copy_e,s,copy_m,c)
 		else 
 			c:pop(1)
+			s:pop(2)
 			--print("O while terminou")	
 		end 
 
