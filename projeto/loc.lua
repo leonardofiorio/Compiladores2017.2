@@ -17,6 +17,10 @@ function Loc:getId()
 	return self.id
 end
 
+function Loc:setValue(value)
+	self.value = value
+end
+
 function Loc:isLoc(obj)
 	if type(obj) == "table" then
 		return true

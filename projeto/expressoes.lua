@@ -95,9 +95,9 @@ function resolverExpressoes(e,s,m,c,ast)
         c:push(var)
         size = table.maxn(m)
         resultado = resolverExpressoes(e,s,m,c, ast.children[2])
-        obj = Loc:new(size+1, resultado)
-        e[var] = obj
-        m[size+1] = obj
+        --obj = Loc:new(size+1, resultado)
+        obj = e[var]
+        obj:setValue(resultado)
         s:pop(1)
         c:pop(3)
 
