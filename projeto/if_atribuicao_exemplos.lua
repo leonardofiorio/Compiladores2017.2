@@ -25,7 +25,6 @@ local ast = node(";", {
 	})
 })
 
-
 local ast = node(";", {
 	node("Var",{
 		node("NameList", {
