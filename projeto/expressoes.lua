@@ -60,6 +60,7 @@ function resolverExpressoes(e,s,m,c,ast)
       s:pop(1)
       s:pop(1)
       c:pop(1)
+      print(ast.children[2].data)
       if t == "tt" then 
         commands = resolverExpressoes(e,s,m,c, ast.children[2])
         return commands
