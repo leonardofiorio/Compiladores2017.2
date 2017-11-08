@@ -9,7 +9,10 @@ Dependências:
 	- Lpeg
 
 Execução do projeto na versão atual:
-	- Arquivo ast_exemplos.lua possui exemplos de execução de árvores AST
-	- Parser lua LuaFish
+	- Na pasta "projeto" executar o comando: export LUA_PATH='parser/lib/?.lua;parser/examples/?.lua;?.lua'
+	- Ainda na pasta projeto, executar comando: lua parser/bin/luafish.lua " código aqui "
+		Ex: lua parser/bin/luafish.lua "var result = 1; var fat = 5; while not(fat==0) do result = result * fat; fat = fat - 1; end"
+	
+	
 
 
