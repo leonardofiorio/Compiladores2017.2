@@ -58,4 +58,4 @@ local ast = node(";", {
 	})
 })
 
-resolverComandos(e,s,m,c,ast)
+resolverComandos(e,s,m,c,o,ast)

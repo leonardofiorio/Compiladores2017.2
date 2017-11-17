@@ -5,6 +5,16 @@ loc = require "loc"
 
 local exp = lpeg.S"add" + lpeg.S"sub" + lpeg.S"mul" + lpeg.S"eq" + lpeg.S"not" + lpeg.S"att" + lpeg.S"or"+lpeg.S"Set"
 
+
+function exitCommand(e,s,m,c,o,param)
+	e = {}
+	s = Stack:Create()
+	m = {}
+	c = Stack:Create()
+	o = param
+	printSMC(e,s,m,c,o)
+end
+
 function resolverComandos(e,s,m,c,o, ast)
 	local data
 	if ast ~= nil then
@@ -165,6 +175,8 @@ function resolverComandos(e,s,m,c,o, ast)
 		o = o .. resolverExpressoes(e,s,m,c,o, ast.children[2])
 		c:pop(1)
 		printSMC(e,s,m,c,o)
+	elseif ast.children[1].children[1].data == "exit" then
+		return exitCommand(e,s,m,c,o,resolverExpressoes(e,s,m,c,o,ast.children[2]))
 	elseif data == ";" or data=="Block" then
 	  print(";")
       for _,child in pairs(ast.children) do
