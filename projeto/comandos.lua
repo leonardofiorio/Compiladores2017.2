@@ -13,6 +13,7 @@ function exitCommand(e,s,m,c,o,param)
 	c = Stack:Create()
 	o = param
 	printSMC(e,s,m,c,o)
+	os.exit() -- Encerra o programa
 end
 
 function resolverComandos(e,s,m,c,o, ast)

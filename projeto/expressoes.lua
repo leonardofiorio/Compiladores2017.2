@@ -148,8 +148,8 @@ function resolverExpressoes(e,s,m,c,o,ast)
         val1 = resolverExpressoes(e,s,m,c,o,ast.children[2])
         val2 = resolverExpressoes(e,s,m,c,o, ast.children[3])
 
-        print(val1)
-        print(val2)
+        --print(val1)
+        --print(val2)
 
         resultado = val1+val2
 
