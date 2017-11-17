@@ -165,10 +165,38 @@ function resolverComandos(e,s,m,c,o, ast)
 			commands_else = resolverComandos(copy_e,s,copy_m,c,o, ast.children[3])
 		end
 
-		tam = table.maxn(m)
-		for i=tam+1, table.maxn(copy_m),1 do
-			m[i] = copy_m[i]
-		end
+		-- tam = table.maxn(m)
+		-- for i=tam+1, table.maxn(copy_m),1 do
+		-- 	m[i] = copy_m[i]
+		-- end
+
+		--garbage colector
+		for i=1, #copy_m do
+			local contains = false
+		    if copy_m[i] ~= nil then
+		    	for key, value in pairs(e) do
+			    	if value ~= nil then
+				      if Loc:isLoc(value) then
+				        if copy_m[i]:getId() == e[key]:getId() then
+				        	contains = true
+				        end
+				      else
+				        if copy_m[i]:getId() == e[key] then
+				        	contains = true
+				        end
+				      end
+			    	end
+			  	end
+			  	if contains then
+		    		m[i] = copy_m[i]
+		    	end
+	    	end
+	  	end
+
+	 --  	m = {}
+		-- for i, v in pairs(cleanedMemory) do 
+		-- 	m[i] = cleanedMemory[i]
+		-- end
 
 		--print("O If terminou")
 	elseif ast.children[1].children[1].data == "print" then
