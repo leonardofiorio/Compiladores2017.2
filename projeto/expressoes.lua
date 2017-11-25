@@ -13,6 +13,7 @@ c = Stack:Create() -- Criando pilha para C
 o = ""
 
 require "loc"
+require "abs"
 
 
 function resolverExpressoes(e,s,m,c,o,ast)
@@ -197,6 +198,8 @@ function resolverExpressoes(e,s,m,c,o,ast)
       return resolverExpressoes(e,s,m,c,o, ast.children[1])
     elseif data == "Paren" then
       return resolverExpressoes(e,s,m,c,o, ast.children[1])
+    elseif data == "Number" then
+      return resolverExpressoes(e,s,m,c,o, ast.children[1])
     elseif data == ";" then
       for _,child in ipairs(ast.children) do
         resolverExpressoes(e,s,m,c,o, child)
@@ -248,10 +251,12 @@ function printSMC(e, s, m, c, o)
   -- E
 	for i, v in pairs(e) do
     if v ~= nil then
-      if Loc:isLoc(v) then
-        smc = smc.."["..i.."]".."=".. e[i]:getId() .." "
-      else
+      if type(v) == "number" then
         smc = smc.."["..i.."]".."=".. e[i] .." "
+      elseif Loc:isLoc(v) then
+        smc = smc.."["..i.."]".."=".. e[i]:getId() .." "
+      elseif Abs:isAbs(v) then
+        smc = smc.."["..i.."]".."=".. e[i].node.data .." "       
       end
     end
   end
@@ -269,7 +274,9 @@ function printSMC(e, s, m, c, o)
   -- M
   for i=1, table.maxn(m) do
     if m[i] ~= nil then
-      smc = smc.."loc("..m[i]:getId()..")".."=>".. m[i]:getValue() .." "
+      if Loc:isLoc(m[i]) then
+        smc = smc.."loc("..m[i]:getId()..")".."=>".. m[i]:getValue() .." "
+      end
     end
   end
 

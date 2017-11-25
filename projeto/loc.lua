@@ -6,6 +6,7 @@ function Loc:new(id, value)
 	setmetatable(l, Loc)
 	l.id = id
 	l.value = value
+	l.type = 'LOC'
 	return l
 end
 
@@ -22,7 +23,7 @@ function Loc:setValue(value)
 end
 
 function Loc:isLoc(obj)
-	if type(obj) == "table" then
+	if obj.type == "LOC" then
 		return true
 	end
 	return false

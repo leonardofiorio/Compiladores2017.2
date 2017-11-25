@@ -87,7 +87,7 @@ function resolverComandos(e,s,m,c,o, ast)
 		if s:pop(1) == "tt" then
 			-- Bloco de comandos
 			resolverComandos(copy_e,s,copy_m,c,o, ast.children[2])
-			printSMC(copy_e,s,copy_m,c)
+			printSMC(copy_e,s,copy_m,c,o)
 
 			c:pop(1)
 			c:push(commands)
@@ -98,7 +98,7 @@ function resolverComandos(e,s,m,c,o, ast)
 			c:pop(5)
 			s:pop(1)
 			resolverComandos(copy_e,s,copy_m,c,o, ast)
-			printSMC(copy_e,s,copy_m,c)
+			printSMC(copy_e,s,copy_m,c,o)
 		else 
 			c:pop(1)
 			s:pop(2)
@@ -172,28 +172,29 @@ function resolverComandos(e,s,m,c,o, ast)
 		-- end
 
 		--garbage colector
-		for i=1, #copy_m do
-			local contains = false
-		    if copy_m[i] ~= nil then
-		    	for key, value in pairs(e) do
-			    	if value ~= nil then
-				      if Loc:isLoc(value) then
-				        if copy_m[i]:getId() == e[key]:getId() then
-				        	contains = true
-				        end
-				      else
-				        if copy_m[i]:getId() == e[key] then
-				        	contains = true
-				        end
-				      end
-			    	end
-			  	end
-			  	if contains then
-		    		m[i] = copy_m[i]
-		    	end
-	    	end
-	  	end
-
+		-- for i=1, #copy_m do
+		-- 	local contains = false
+		--     if copy_m[i] ~= nil then
+		--     	for key, value in pairs(e) do
+		-- 	    	if value ~= nil then
+		-- 		      if Loc:isLoc(value) then
+		-- 		        if copy_m[i]:getId() == e[key]:getId() then
+		-- 		        	contains = true
+		-- 		        end
+		-- 		      -- else
+		-- 		      --   if copy_m[i]:getId() == e[key] then
+		-- 		      --   	contains = true
+		-- 		      --   end
+		-- 		      end
+		-- 	    	end
+		-- 	  	end
+		-- 	  	if contains then
+		--     		m[i] = copy_m[i]
+		--     	end
+	 --    	end
+	 --  	end
+	 		--print("Teste")
+		  	printSMC(e,s,m,c,o)
 	 --  	m = {}
 		-- for i, v in pairs(cleanedMemory) do 
 		-- 	m[i] = cleanedMemory[i]
@@ -206,6 +207,26 @@ function resolverComandos(e,s,m,c,o, ast)
 		printSMC(e,s,m,c,o)
 	elseif ast.children[1].children[1].data == "exit" then
 		return exitCommand(e,s,m,c,o,resolverExpressoes(e,s,m,c,o,ast.children[2]))
+	elseif ast.data == "FunctionDef" then
+		print("Declaração de procedimento")	
+
+		-- Nome do procedimento
+		local id_proc = ast.children[1].children[1].children[1].data
+
+		-- Bloco de comandos do procedimento
+		size = table.maxn(m)
+		obj = Abs:new(size+1,ast.children[3])
+		print(ast.children[3].data)
+		m[size+1] = obj
+		e[id_proc] = obj
+
+		printSMC(e,s,m,c,o)
+		return
+	elseif data == "Call" then
+		for i, v in pairs(ast.children[2].children) do
+			resolverExpressoes(e,s,m,c,o, ast.children[2].children[i])
+		end
+		printSMC(e,s,m,c,o)
 	elseif data == ";" or data=="Block" then
 	  print(";")
       for _,child in pairs(ast.children) do
