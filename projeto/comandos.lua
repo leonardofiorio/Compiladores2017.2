@@ -16,6 +16,7 @@ function exitCommand(e,s,m,c,o,param)
 	os.exit() -- Encerra o programa
 end
 
+
 function resolverComandos(e,s,m,c,o, ast)
 	local data
 	if ast ~= nil then
@@ -213,20 +214,44 @@ function resolverComandos(e,s,m,c,o, ast)
 		-- Nome do procedimento
 		local id_proc = ast.children[1].children[1].children[1].data
 
-		-- Bloco de comandos do procedimento
-		size = table.maxn(m)
-		obj = Abs:new(size+1,ast.children[3])
-		print(ast.children[3].data)
-		m[size+1] = obj
+		-- Parâmetros formais
+		local param_form = {}		
+		for i=1, table.maxn(ast.children[2].children), 1 do
+			param_form[i] = ast.children[2].children[i].children[1].data
+		end		
+
+		-- Bloco de comandos
+		local bloco = ast.children[3]
+
+		-- Inserindo função no ambiente
+		obj = Abs:new(param_form,bloco)
 		e[id_proc] = obj
 
 		printSMC(e,s,m,c,o)
 		return
 	elseif data == "Call" then
+		nome_procedimento = ast.children[1].children[1].data
+		print("Executando: ", nome_procedimento)
+
+
+		vetor_param = {}
 		for i, v in pairs(ast.children[2].children) do
-			resolverExpressoes(e,s,m,c,o, ast.children[2].children[i])
+			vetor_param[i] = resolverExpressoes(e,s,m,c,o, ast.children[2].children[i])
+			c:pop(1)
 		end
+
+		for i = 1, table.maxn(vetor_param) do
+			size = table.maxn(m)
+			val = vetor_param[i]
+			obj = Loc:new(size+1,val)
+			m[size+1] = obj
+			e[e[nome_procedimento].param[i]] = obj
+		end
+
+		c:pop(3)
 		printSMC(e,s,m,c,o)
+
+		resolverComandos(e,s,m,c,o, e[nome_procedimento].seq)
 	elseif data == ";" or data=="Block" then
 	  print(";")
       for _,child in pairs(ast.children) do

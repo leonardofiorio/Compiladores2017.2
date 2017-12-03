@@ -21,6 +21,8 @@ function resolverExpressoes(e,s,m,c,o,ast)
   if ast ~= nil then
     local data = getData(ast, e)
 
+    print(data)
+
     if (tonumber(data) ~= nil) then
       num = tonumber(data)
       c:push(num)
@@ -129,7 +131,6 @@ function resolverExpressoes(e,s,m,c,o,ast)
       return resultado
     elseif data== "ExpList" or data=="Number" then
       return resolverExpressoes(e,s,m,c,o, ast.children[1])
-    
     elseif data == "Op" then
       if ast.children[1].data == "==" then
         print("EQ")
@@ -256,7 +257,7 @@ function printSMC(e, s, m, c, o)
       elseif Loc:isLoc(v) then
         smc = smc.."["..i.."]".."=".. e[i]:getId() .." "
       elseif Abs:isAbs(v) then
-        smc = smc.."["..i.."]".."=".. e[i].node.data .." "       
+        smc = smc.."["..i.."]".."=abs( "..", " .. e[i].seq.data ..") "       
       end
     end
   end

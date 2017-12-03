@@ -1,25 +1,29 @@
 Abs = {}
 Abs.__index = Loc
 
-function Abs:new(id, node)
+function Abs:new(param, seq)
 	l = {}
 	setmetatable(l, Loc)
-	l.id = id
-	l.node = node
+	l.param = param
+	l.seq = seq
 	l.type = 'ABS'
 	return l
 end
 
-function Abs:getNode()
-   return self.node
+function Abs:getParam()
+   return self.param
 end
 
-function Abs:getId()
-	return self.id
+function Abs:getSeq()
+	return self.seq
 end
 
-function Abs:setNode(node)
-	self.value = value
+function Abs:setParam(param)
+	self.param = param
+end
+
+function Abs:setSeq(seq)
+	self.seq = seq
 end
 
 function Abs:isAbs(obj)
