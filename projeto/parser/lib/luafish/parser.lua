@@ -255,6 +255,8 @@ local function build_grammar(self)
         / self.handle_if +
     (C2'FunctionDef' * keyword'function' * V'funcname' * V'funcbody')
          / self.handle_functiondef +
+    (C2'FunctionDef' * keyword'proc' * V'funcname' * V'funcbody')
+         / self.handle_functiondef +
     (C2'LocalFunctionDef' * keyword'local' * keyword'function' * name *
          V'funcbody')
          / self.handle_localfunctiondef +
