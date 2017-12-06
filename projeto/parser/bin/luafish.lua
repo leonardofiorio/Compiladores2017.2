@@ -6,6 +6,7 @@ macro.addloader()
 --    EXEMPLO OF USAGE ON PROJECT DIRECTORY: 
 --    export LUA_PATH='parser/lib/?.lua;parser/examples/?.lua;?.lua'
 --    lua parser/bin/luafish.lua "code"
+-- lua parser/bin/luafish.lua "proc f(x) if not(x==10) then f(x+1) end end f(1)"
 
 function buildAST(ast, currentNode)
   for key,value in ipairs(ast) do

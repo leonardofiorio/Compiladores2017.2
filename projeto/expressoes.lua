@@ -292,7 +292,9 @@ function printSMC(e, s, m, c, o)
     element = stack:pop(1)
    end
 	smc = smc .. "C, "
-  smc = smc .. o
+  if o then
+    smc = smc .. o
+  end
   smc = smc .. " O >\n"
 	print(smc)
 end

@@ -5,7 +5,6 @@ loc = require "loc"
 
 local exp = lpeg.S"add" + lpeg.S"sub" + lpeg.S"mul" + lpeg.S"eq" + lpeg.S"not" + lpeg.S"att" + lpeg.S"or"+lpeg.S"Set"
 
-
 function exitCommand(e,s,m,c,o,param)
 	e = {}
 	s = Stack:Create()
@@ -207,6 +206,8 @@ function resolverComandos(e,s,m,c,o, ast)
 		c:pop(1)
 		printSMC(e,s,m,c,o)
 	elseif ast.children[1].children[1].data == "exit" then
+		c:push("exit");
+		printSMC(e,s,m,c,o)
 		return exitCommand(e,s,m,c,o,resolverExpressoes(e,s,m,c,o,ast.children[2]))
 	elseif ast.data == "FunctionDef" then
 		print("Declaração de procedimento")	
