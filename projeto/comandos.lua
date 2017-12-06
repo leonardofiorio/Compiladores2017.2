@@ -98,7 +98,7 @@ function resolverComandos(e,s,m,c,o, ast)
 			c:pop(5)
 			s:pop(1)
 			resolverComandos(copy_e,s,copy_m,c,o, ast)
-			printSMC(copy_e,s,copy_m,c,o)
+			printSMC(e,s,m,c,o)
 		else 
 			c:pop(1)
 			s:pop(2)
@@ -205,6 +205,7 @@ function resolverComandos(e,s,m,c,o, ast)
 		o = o .. resolverExpressoes(e,s,m,c,o, ast.children[2])
 		c:pop(1)
 		printSMC(e,s,m,c,o)
+		return
 	elseif ast.children[1].children[1].data == "exit" then
 		c:push("exit");
 		printSMC(e,s,m,c,o)
